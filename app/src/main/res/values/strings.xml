@@ -1,6 +1,12 @@
 <resources>
-    <string name="app_name">VeterinaryReports</string>
+    <string name="app_name">Laudos Veterinários</string>
     <string name="report">Laudos</string>
     <string name="new_report">Novo</string>
     <string name="search">Perquisar</string>
+    <string name="gender">Gênero</string>
+    <string name="specie">Espécie</string>
+    <string name="breed">Raça</string>
+    <string name="male">Macho</string>
+    <string name="female">Fêmea</string>
+    <string name="save">Salvar</string>
 </resources>
