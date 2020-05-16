@@ -18,7 +18,8 @@
             android:id="@+id/first_layout"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            >
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
@@ -28,39 +29,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:textSize="12sp"
                     android:text="@string/gender"/>
                 <AutoCompleteTextView
                     android:id="@+id/gender_actv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
                     android:layout_marginStart="8dp"
                     android:completionThreshold="1"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:textSize="12sp"
                     android:text="@string/specie"/>
                 <AutoCompleteTextView
                     android:id="@+id/specie_actv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
                     android:layout_marginStart="8dp"
                     android:completionThreshold="1" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:textSize="12sp"
                     android:text="@string/breed"/>
                 <AutoCompleteTextView
                     android:id="@+id/breed_actv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
                     android:layout_marginStart="8dp"
                     android:completionThreshold="1" />
             </LinearLayout>
@@ -75,7 +70,7 @@
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     app:srcCompat="@drawable/ic_add_a_photo_black_24dp"
                     tools:srcCompat="@tools:sample/avatars[3]" />
                 <LinearLayout
@@ -103,7 +98,8 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/first_layout">
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
@@ -112,14 +108,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
                     android:layout_marginStart="8dp"
                     android:text="@string/name"/>
                 <EditText
                     android:id="@+id/patient_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
                     android:layout_marginStart="8dp"
                     android:ems="10"
                     android:inputType="textPersonName"/>
@@ -133,16 +127,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:textSize="12sp"
                     android:text="@string/age"/>
                 <EditText
                     android:id="@+id/patient_age"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
                     android:layout_marginStart="8dp"
                     android:ems="10"
-                    android:inputType="number"/>
+                    android:inputType="textPersonName"/>
             </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
@@ -153,37 +145,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:textSize="12sp"
                     android:text="@string/weight"/>
                 <EditText
                     android:id="@+id/patient_weight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
                     android:layout_marginStart="8dp"
                     android:ems="10"
-                    android:inputType="number"/>
+                    android:inputType="textPersonName"/>
             </LinearLayout>
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textSize="12sp"
             android:text="@string/owner"/>
         <EditText
             android:id="@+id/owner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textSize="14sp"
             android:ems="10"
             android:inputType="textPersonName"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textSize="12sp"
             android:text="@string/previous_exams"/>
         <TextView
             android:id="@+id/previous_exams"
@@ -192,20 +179,18 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:textSize="14sp"
             android:drawableEnd="@drawable/ic_add_black_24dp"
             android:drawablePadding="8dp"/>
-        <View
+        <view
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="2px"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:background="#A9A9A9"/>
+            android:background="#C0C0C0"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textSize="12sp"
             android:text="@string/diagnostics"/>
         <TextView
             android:id="@+id/diagnostics"
@@ -214,52 +199,50 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:textSize="14sp"
             android:drawableEnd="@drawable/ic_add_black_24dp"
             android:drawablePadding="8dp"
             android:ems="10" />
-        <View
+        <view
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="2px"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:background="#A9A9A9"/>
+            android:background="#DCDCDC"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textSize="12sp"
             android:text="@string/procedure_performed"/>
         <EditText
             android:id="@+id/procedure_performed"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/input_container_size"
+            android:layout_height="150dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:drawablePadding="8dp"
             android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textMultiLine"
-            android:maxLines="6"
-            android:textSize="12sp" />
+            android:inputType="textPersonName" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textSize="12sp"
             android:text="@string/recommendations"/>
-        <EditText
-            android:id="@+id/recommendations"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/input_container_size"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textMultiLine"
-            android:maxLines="6"
-            android:textSize="12sp"/>
+            <EditText
+                android:id="@+id/recommendations"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:maxLines="6"
+                android:textSize="12sp"/>
     </LinearLayout>
+
+
+
+
     <Button
         android:id="@+id/button"
         style="@style/Widget.AppCompat.Button.Colored"

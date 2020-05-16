@@ -12,13 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.wparja.veterinaryreports.data.DataProvider;
 import com.wparja.veterinaryreports.persistence.entities.Specie;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class NewReportActivity extends AppCompatActivity {
@@ -29,7 +29,7 @@ public class NewReportActivity extends AppCompatActivity {
     AutoCompleteTextView mSpeciesActv;
     AutoCompleteTextView mBreeds;
 
-    EditText mEditText;
+    TextView mEditText;
     List<Specie> mSpecies;
 
     @Override
@@ -82,7 +82,7 @@ public class NewReportActivity extends AppCompatActivity {
 //            public void onTextChanged(CharSequence s, int start, int before, int count) {
 //                Optional<Specie> specie = DataProvider.getInstance().getSpecies().stream().filter(x -> x.getName().equals(s)).findFirst();
 //                if (specie.isPresent()) {
-//                    ArrayAdapter<String> breedsAdapter = new ArrayAdapter<>(NewReportActivity.this, android.R.layout.simple_dropdown_item_1line, specie.get().getBreeds());
+//                    ArrayAdapter<String> breedsAdapter = new ArrayAdapter<>(NewReportActivity.this, android.R.layout.simple_dropdown_item_1line, specie.get().getItems());
 //                    mBreeds.setAdapter(breedsAdapter);
 //                }
 //            }
@@ -95,7 +95,7 @@ public class NewReportActivity extends AppCompatActivity {
 
     }
 
-    private void createChoiceDialog(EditText editText, List<String> data, List<String> data1) {
+    private void createChoiceDialog(TextView editText, List<String> data, List<String> data1) {
         AlertDialog.Builder builder = new AlertDialog.Builder(NewReportActivity.this);
         final LayoutInflater inflater = LayoutInflater.from(NewReportActivity.this);
         View view = inflater.inflate(R.layout.dialog_choice_data, null, false);
@@ -154,6 +154,6 @@ public class NewReportActivity extends AppCompatActivity {
     public void save(View view) {
         String specieName = mSpeciesActv.getText().toString();
         String breedName = mBreeds.getText().toString();
-        DataProvider.getInstance().UpdateSpecie(specieName, breedName);
+        DataProvider.getInstance().saveSpecie(specieName, breedName);
     }
 }

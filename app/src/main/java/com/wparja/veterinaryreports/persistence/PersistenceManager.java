@@ -15,6 +15,8 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.wparja.veterinaryreports.persistence.entities.Diagnostics;
+import com.wparja.veterinaryreports.persistence.entities.Exams;
 import com.wparja.veterinaryreports.persistence.entities.Specie;
 
 import java.sql.SQLException;
@@ -47,6 +49,8 @@ public class PersistenceManager extends OrmLiteSqliteOpenHelper {
     private void initialize() {
         try {
            entities.add(Specie.class);
+           entities.add(Diagnostics.class);
+           entities.add(Exams.class);
         } catch (Exception e) {
             Log.wtf(TAG, "initialize: " + e);
         }

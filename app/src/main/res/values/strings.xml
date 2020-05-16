@@ -14,7 +14,7 @@
     <string name="weight">Peso</string>
     <string name="owner">Responsável</string>
     <string name="previous_exams">Exames prévios</string>
-    <string name="diagnosis">Diagnóstico</string>
+    <string name="diagnostics">Diagnóstico</string>
     <string name="procedure_performed">Procedimento realizado</string>
     <string name="recommendations">Recomendações</string>
     <string name="ok">OK</string>
