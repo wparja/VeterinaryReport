@@ -20,7 +20,7 @@ public class VeterinaryReports extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Thread.setDefaultUncaughtExceptionHandler(new VeterinaryReportsExceptionHandler(getApplicationContext()));
+      //  Thread.setDefaultUncaughtExceptionHandler(new VeterinaryReportsExceptionHandler(getApplicationContext()));
         DataProvider.getInstance().init(getApplicationContext());
     }
 

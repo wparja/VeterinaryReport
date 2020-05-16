@@ -9,4 +9,14 @@
     <string name="male">Macho</string>
     <string name="female">Fêmea</string>
     <string name="save">Salvar</string>
+    <string name="name">Name</string>
+    <string name="age">Idade</string>
+    <string name="weight">Peso</string>
+    <string name="owner">Responsável</string>
+    <string name="previous_exams">Exames prévios</string>
+    <string name="diagnosis">Diagnóstico</string>
+    <string name="procedure_performed">Procedimento realizado</string>
+    <string name="recommendations">Recomendações</string>
+    <string name="ok">OK</string>
+    <string name="new_exam">Novo exame</string>
 </resources>
