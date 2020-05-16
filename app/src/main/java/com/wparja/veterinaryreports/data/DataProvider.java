@@ -28,14 +28,13 @@ public class DataProvider {
 
 
     private DataProvider() {
-        createDefaultEntities();
     }
 
     private void createDefaultEntities() {
         mDiagnostics = new Diagnostics();
         mExams = new Exams();
-        mPersistenceManager.persist(mDiagnostics);
-        mPersistenceManager.persist(mExams);
+        mDiagnostics = mPersistenceManager.persist(mDiagnostics);
+        mExams = mPersistenceManager.persist(mExams);
     }
 
     public void loadData() {

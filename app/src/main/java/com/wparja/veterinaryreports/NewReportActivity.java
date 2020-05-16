@@ -6,12 +6,16 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.wparja.veterinaryreports.data.DataProvider;
@@ -19,27 +23,35 @@ import com.wparja.veterinaryreports.persistence.entities.Specie;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class NewReportActivity extends AppCompatActivity {
 
     Toolbar mToolbar;
 
-    AutoCompleteTextView mGenders;
+    Spinner mGendersSpinner;
     AutoCompleteTextView mSpeciesActv;
-    AutoCompleteTextView mBreeds;
+    AutoCompleteTextView mBreedsActv;
 
-    TextView mEditText;
+    TextView mExams;
+    TextView mDiagnostics;
     List<Specie> mSpecies;
+
+    List<String> mExamsSelected = new ArrayList<>();
+    List<String> mDiagnosticsSelected = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_report);
 
-        mGenders = findViewById(R.id.gender_actv);
+        mGendersSpinner = findViewById(R.id.gender_spinner);
         mSpeciesActv = findViewById(R.id.specie_actv);
-        mBreeds = findViewById(R.id.breed_actv);
+        mBreedsActv = findViewById(R.id.breed_actv);
+        mExams = findViewById(R.id.previous_exams);
+        mDiagnostics = findViewById(R.id.diagnostics);
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -47,93 +59,98 @@ public class NewReportActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.new_report);
 
+        DataProvider.getInstance().loadData();
+        fillGenderSpinner();
 
-        mEditText = findViewById(R.id.previous_exams);
-        mEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<String> data = new ArrayList<>();
-                data.add("Teste");
-                data.add("Teste 2");
+        fillAndSetListenerSpecieAutoCompleteTextView();
 
-                List<String> data1 = new ArrayList<>();
-                data1.add("Teste");
-                createChoiceDialog(mEditText, data, data1);
-            }
+        mExams.setOnClickListener(v -> {
+            createChoiceDialog(getString(R.string.previous_exams), getString(R.string.new_exam), mExams, DataProvider.getInstance().getExams().getItems(), mExamsSelected);
         });
 
-
-//        DataProvider.getInstance().loadData();
-//        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new String[] {getString(R.string.male), getString(R.string.female)});
-//        mGenders.setAdapter(genderAdapter);
-//
-//        mSpecies = DataProvider.getInstance().getSpecies();
-//        List<String> specieNames = mSpecies.stream().map( x -> x.getName()).collect(Collectors.toList());
-//        ArrayAdapter<String> speciesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, specieNames);
-//        mSpeciesActv.setAdapter(speciesAdapter);
-//
-//        mSpeciesActv.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                Optional<Specie> specie = DataProvider.getInstance().getSpecies().stream().filter(x -> x.getName().equals(s)).findFirst();
-//                if (specie.isPresent()) {
-//                    ArrayAdapter<String> breedsAdapter = new ArrayAdapter<>(NewReportActivity.this, android.R.layout.simple_dropdown_item_1line, specie.get().getItems());
-//                    mBreeds.setAdapter(breedsAdapter);
-//                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
+        mDiagnostics.setOnClickListener(v -> {
+            createChoiceDialog(getString(R.string.diagnostics), getString(R.string.new_diagnostic), mDiagnostics, DataProvider.getInstance().getDiagnostics().getItems(), mDiagnosticsSelected);
+        });
 
     }
 
-    private void createChoiceDialog(TextView editText, List<String> data, List<String> data1) {
+    private void fillAndSetListenerSpecieAutoCompleteTextView() {
+        mSpecies = DataProvider.getInstance().getSpecies();
+        List<String> specieNames = mSpecies.stream().map(x -> x.getName()).collect(Collectors.toList());
+        ArrayAdapter<String> speciesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, specieNames);
+        mSpeciesActv.setAdapter(speciesAdapter);
+
+        mSpeciesActv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Optional<Specie> specie = mSpecies.stream().filter(x -> x.getName().equals(s.toString())).findFirst();
+                if (specie.isPresent()) {
+                    ArrayAdapter<String> breedsAdapter = new ArrayAdapter<>(NewReportActivity.this, android.R.layout.simple_dropdown_item_1line, specie.get().getItems());
+                    mBreedsActv.setAdapter(breedsAdapter);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private void fillGenderSpinner() {
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new String[] {getString(R.string.male), getString(R.string.female)});
+        mGendersSpinner.setAdapter(genderAdapter);
+        mGendersSpinner.setSelection(0);
+    }
+
+    private void createChoiceDialog(String title, String label, TextView editText, List<String> allData, List<String> allDataSelected) {
         AlertDialog.Builder builder = new AlertDialog.Builder(NewReportActivity.this);
         final LayoutInflater inflater = LayoutInflater.from(NewReportActivity.this);
         View view = inflater.inflate(R.layout.dialog_choice_data, null, false);
-        EditText newExam = view.findViewById(R.id.new_exam);
-        builder.setView(view);
-        builder.setTitle(getString(R.string.previous_exams));
+        TextView newDataLabel = view.findViewById(R.id.new_data_text_view);
+        EditText newDataInput = view.findViewById(R.id.new_data);
 
-        boolean[] checkedItems = new boolean[data.size()];
-        for (int i = 0; i < data.size(); i++) {
-            for (int j = 0; j < data1.size(); j++) {
-                if (data.get(i).equals(data1.get(j))) {
+        builder.setView(view);
+        builder.setTitle(title);
+        newDataLabel.setText(label);
+
+        boolean[] checkedItems = new boolean[allData.size()];
+        for (int i = 0; i < allData.size(); i++) {
+            for (int j = 0; j < allDataSelected.size(); j++) {
+                if (allData.get(i).equals(allDataSelected.get(j))) {
                     checkedItems[i] = true;
                     break;
                 }
             }
         }
-        builder.setMultiChoiceItems(data.toArray(new CharSequence[data.size()]), checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+        builder.setMultiChoiceItems(allData.toArray(new CharSequence[allData.size()]), checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                 if (isChecked) {
-                    data1.add(data.get(which));
+                    allDataSelected.add(allData.get(which));
                 } else {
-                    data1.remove(data.get(which));
+                    allDataSelected.remove(allData.get(which));
                 }
             }
         });
 
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> {
 
-                if (!TextUtils.isEmpty(newExam.getText()) && !data1.contains(newExam.getText().toString())) {
-                    data1.add(newExam.getText().toString());
-                }
-
-                editText.setText(TextUtils.join(", ", data1));
-                dialog.dismiss();
+            if (!TextUtils.isEmpty(newDataInput.getText()) && !allDataSelected.contains(newDataInput.getText().toString())) {
+                allDataSelected.add(newDataInput.getText().toString());
             }
+
+            editText.setText(TextUtils.join(", ", allDataSelected));
+            dialog.dismiss();
+        });
+
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+           dialog.dismiss();
         });
 
 
@@ -153,7 +170,9 @@ public class NewReportActivity extends AppCompatActivity {
 
     public void save(View view) {
         String specieName = mSpeciesActv.getText().toString();
-        String breedName = mBreeds.getText().toString();
+        String breedName = mBreedsActv.getText().toString();
         DataProvider.getInstance().saveSpecie(specieName, breedName);
+        DataProvider.getInstance().saveExams(mExamsSelected);
+        DataProvider.getInstance().saveDiagnostic(mDiagnosticsSelected);
     }
 }

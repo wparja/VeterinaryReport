@@ -19,4 +19,6 @@
     <string name="recommendations">Recomendações</string>
     <string name="ok">OK</string>
     <string name="new_exam">Novo exame</string>
+    <string name="new_diagnostic">Novo diagnóstico</string>
+    <string name="cancel">Cancelar</string>
 </resources>
