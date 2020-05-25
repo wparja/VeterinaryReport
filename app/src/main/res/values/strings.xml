@@ -21,4 +21,10 @@
     <string name="new_exam">Novo exame</string>
     <string name="new_diagnostic">Novo diagnóstico</string>
     <string name="cancel">Cancelar</string>
+    <string name="history">Histórico</string>
+    <string name="procedured_at">Realizado em</string>
+    <string name="procedure_at">Realizado em</string>
+    <string name="init_at">Inicio</string>
+    <string name="end_at">Fim</string>
+    <string name="export">Exportar</string>
 </resources>

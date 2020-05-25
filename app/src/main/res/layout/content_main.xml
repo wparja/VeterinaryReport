@@ -30,6 +30,20 @@
             android:onClick="callActivity"
             style="@style/Widget.AppCompat.Button.Colored"
             android:text="@string/report" />
+        <Button
+            android:id="@+id/export_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_gravity="center"
+            android:onClick="export"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:text="@string/export" />
+        <TextView
+            android:id="@+id/textArea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="teste"/>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,8 +2,10 @@ package com.wparja.veterinaryreports.data;
 
 import android.content.Context;
 import com.wparja.veterinaryreports.persistence.PersistenceManager;
+import com.wparja.veterinaryreports.persistence.entities.Clinics;
 import com.wparja.veterinaryreports.persistence.entities.Diagnostics;
 import com.wparja.veterinaryreports.persistence.entities.Exams;
+import com.wparja.veterinaryreports.persistence.entities.Report;
 import com.wparja.veterinaryreports.persistence.entities.Specie;
 
 import java.util.ArrayList;
@@ -21,6 +23,8 @@ public class DataProvider {
     private List<Specie> mSpecies = new ArrayList<>();
     private Diagnostics mDiagnostics;
     private Exams mExams;
+    private Clinics mClinics;
+    private List<Report> mReports = new ArrayList<>();
 
     public void init(Context context) {
         mPersistenceManager = new PersistenceManager(context);
@@ -33,15 +37,17 @@ public class DataProvider {
     private void createDefaultEntities() {
         mDiagnostics = new Diagnostics();
         mExams = new Exams();
+        mClinics = new Clinics();
         mDiagnostics = mPersistenceManager.persist(mDiagnostics);
         mExams = mPersistenceManager.persist(mExams);
+        mClinics = mPersistenceManager.persist(mClinics);
     }
 
     public void loadData() {
         mSpecies = mPersistenceManager.getAll(Specie.class);
         mDiagnostics = mPersistenceManager.get(1, Diagnostics.class);
         mExams = mPersistenceManager.get(1, Exams.class);
-
+        mClinics = mPersistenceManager.get(1, Clinics.class);
         if (mDiagnostics == null && mExams == null) {
             createDefaultEntities();
         }
@@ -52,6 +58,7 @@ public class DataProvider {
     }
     public Diagnostics getDiagnostics() {return  mDiagnostics;}
     public Exams getExams() { return mExams; }
+    public Clinics getClinics() { return mClinics; }
 
     public void saveSpecie(String specieName, String breedName) {
         boolean save = false;
@@ -101,6 +108,13 @@ public class DataProvider {
 
         if (save) {
             mPersistenceManager.persist(mExams);
+        }
+    }
+
+    public void saveClinics(String clinicName) {
+        if (!mClinics.getItems().contains(clinicName)) {
+            mClinics.getItems().add(clinicName);
+            mPersistenceManager.persist(mClinics);
         }
     }
 }

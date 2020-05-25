@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -37,6 +38,13 @@ public class NewReportActivity extends AppCompatActivity {
 
     TextView mExams;
     TextView mDiagnostics;
+
+    EditText mProcedurePerformed;
+    ImageButton mProcedurePerformedImgBtn;
+
+    TextView mRecommendations;
+    TextView mHistory;
+
     List<Specie> mSpecies;
 
     List<String> mExamsSelected = new ArrayList<>();
@@ -52,6 +60,11 @@ public class NewReportActivity extends AppCompatActivity {
         mBreedsActv = findViewById(R.id.breed_actv);
         mExams = findViewById(R.id.previous_exams);
         mDiagnostics = findViewById(R.id.diagnostics);
+        mProcedurePerformed = findViewById(R.id.procedure_performed);
+        mProcedurePerformedImgBtn = findViewById(R.id.procedure_performed_img_btn);
+        mRecommendations = findViewById(R.id.recommendations);
+        mHistory = findViewById(R.id.history);
+
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -64,13 +77,12 @@ public class NewReportActivity extends AppCompatActivity {
 
         fillAndSetListenerSpecieAutoCompleteTextView();
 
-        mExams.setOnClickListener(v -> {
-            createChoiceDialog(getString(R.string.previous_exams), getString(R.string.new_exam), mExams, DataProvider.getInstance().getExams().getItems(), mExamsSelected);
-        });
+        mExams.setOnClickListener(v ->  createChoiceDialog(getString(R.string.previous_exams), getString(R.string.new_exam), mExams, DataProvider.getInstance().getExams().getItems(), mExamsSelected));
+        mDiagnostics.setOnClickListener(v -> createChoiceDialog(getString(R.string.diagnostics), getString(R.string.new_diagnostic), mDiagnostics, DataProvider.getInstance().getDiagnostics().getItems(), mDiagnosticsSelected));
 
-        mDiagnostics.setOnClickListener(v -> {
-            createChoiceDialog(getString(R.string.diagnostics), getString(R.string.new_diagnostic), mDiagnostics, DataProvider.getInstance().getDiagnostics().getItems(), mDiagnosticsSelected);
-        });
+        mProcedurePerformedImgBtn.setOnClickListener(v -> createEditTextDialog(getString(R.string.procedure_performed), mProcedurePerformed));
+        mRecommendations.setOnClickListener(v -> createEditTextDialog(getString(R.string.recommendations), mRecommendations));
+        mHistory.setOnClickListener(v -> createEditTextDialog(getString(R.string.history), mHistory));
 
     }
 
@@ -158,6 +170,24 @@ public class NewReportActivity extends AppCompatActivity {
         dialog.show();
     }
 
+
+    private void createEditTextDialog(String title, TextView text) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(NewReportActivity.this);
+        final LayoutInflater inflater = LayoutInflater.from(NewReportActivity.this);
+        View view = inflater.inflate(R.layout.dialog_edit_data, null, false);
+        EditText data = view. findViewById(R.id.edit_text_data);
+
+        builder.setView(view);
+        builder.setTitle(title);
+        data.setText(text.getText());
+
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> text.setText(data.getText()));
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
