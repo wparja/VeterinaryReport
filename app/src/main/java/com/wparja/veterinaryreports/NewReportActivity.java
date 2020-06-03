@@ -1,11 +1,26 @@
 package com.wparja.veterinaryreports;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.pdf.PrintedPdfDocument;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -16,12 +31,22 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.wparja.veterinaryreports.data.DataProvider;
 import com.wparja.veterinaryreports.persistence.entities.Specie;
+import com.wparja.veterinaryreports.utils.PhotoUtils;
+import com.wparja.veterinaryreports.utils.PictureUtils;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +54,8 @@ import java.util.stream.Collectors;
 
 
 public class NewReportActivity extends AppCompatActivity {
+
+    private static final int REQUEST_PHOTO= 2;
 
     Toolbar mToolbar;
 
@@ -50,6 +77,10 @@ public class NewReportActivity extends AppCompatActivity {
     List<String> mExamsSelected = new ArrayList<>();
     List<String> mDiagnosticsSelected = new ArrayList<>();
 
+    ImageButton mNewPhotoImgButton;
+    File mPatientMainPhotoFile;
+    ImageView mPatientMainPhoto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +95,8 @@ public class NewReportActivity extends AppCompatActivity {
         mProcedurePerformedImgBtn = findViewById(R.id.procedure_performed_img_btn);
         mRecommendations = findViewById(R.id.recommendations);
         mHistory = findViewById(R.id.history);
+        mNewPhotoImgButton = findViewById(R.id.new_photo);
+        mPatientMainPhoto = findViewById(R.id.patient_photo);
 
 
         mToolbar = findViewById(R.id.toolbar);
@@ -84,6 +117,71 @@ public class NewReportActivity extends AppCompatActivity {
         mRecommendations.setOnClickListener(v -> createEditTextDialog(getString(R.string.recommendations), mRecommendations));
         mHistory.setOnClickListener(v -> createEditTextDialog(getString(R.string.history), mHistory));
 
+        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        mPatientMainPhotoFile = PhotoUtils.getPhoto(getApplicationContext(), "mainPhoto1.jpg");
+        boolean canTackPhoto = mPatientMainPhotoFile != null && captureImage.resolveActivity(getPackageManager()) != null;
+
+        if (canTackPhoto) {
+            Uri uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID +".fileprovider", mPatientMainPhotoFile);
+            captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        }
+
+        mNewPhotoImgButton.setOnClickListener(v -> startActivityForResult(captureImage, REQUEST_PHOTO));
+        updatePatientPhoto();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_PHOTO) {
+            updatePatientPhoto();
+        }
+    }
+
+    private void updatePatientPhoto() {
+        if (mPatientMainPhotoFile == null || !mPatientMainPhotoFile.exists()) {
+            mPatientMainPhoto.setImageDrawable(null);
+        } else {
+            Bitmap bitmap = BitmapFactory.decodeFile(mPatientMainPhotoFile.getPath());
+            mPatientMainPhoto.setImageBitmap(bitmap);
+            mPatientMainPhoto.setRotation(90);
+            // Create a shiny new (but blank) PDF document in memory
+            // We want it to optionally be printable, so add PrintAttributes
+            // and use a PrintedPdfDocument. Simpler: new PdfDocument().
+            PrintAttributes printAttrs = new PrintAttributes.Builder().
+                    setColorMode(PrintAttributes.COLOR_MODE_COLOR).
+                    setMediaSize(PrintAttributes.MediaSize.NA_LETTER).
+                    setResolution(new PrintAttributes.Resolution("zooey", PRINT_SERVICE, 300, 300)).
+                    setMinMargins(PrintAttributes.Margins.NO_MARGINS).
+                    build();
+            PdfDocument document = new PrintedPdfDocument(this, printAttrs);
+            // crate a page description
+            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(300, 300, 1).create();
+            // create a new page from the PageInfo
+            PdfDocument.Page page = document.startPage(pageInfo);
+            // repaint the user's text into the page
+            mPatientMainPhoto.draw(page.getCanvas());
+            // do final processing of the page
+            document.finishPage(page);
+            // Here you could add more pages in a longer doc app, but you'd have
+            // to handle page-breaking yourself in e.g., write your own word processor...
+            // Now write the PDF document to a file; it actually needs to be a file
+            // since the Share mechanism can't accept a byte[]. though it can
+            // accept a String/CharSequence. Meh.
+            try {
+                File pdfDirPath = new File(getFilesDir(), "pdfs");
+                pdfDirPath.mkdirs();
+                File file = new File(pdfDirPath, "pdfsend.pdf");
+                Uri contentUri = FileProvider.getUriForFile(this, "com.wparja.veterinaryreports.fileprovider", file);
+                FileOutputStream os = new FileOutputStream(file);
+                document.writeTo(os);
+                document.close();
+                os.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Error generating file", e);
+            }
+        }
     }
 
     private void fillAndSetListenerSpecieAutoCompleteTextView() {

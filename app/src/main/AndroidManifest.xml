@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
 
-
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <application
         android:name=".VeterinaryReports"
         android:allowBackup="true"
