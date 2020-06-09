@@ -24,7 +24,10 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -32,10 +35,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.wparja.veterinaryreports.customcomponents.PdfExportLayout;
 import com.wparja.veterinaryreports.data.DataProvider;
+import com.wparja.veterinaryreports.persistence.entities.ReportEntity;
 import com.wparja.veterinaryreports.persistence.entities.Specie;
 import com.wparja.veterinaryreports.utils.PhotoUtils;
 import com.wparja.veterinaryreports.utils.PictureUtils;
@@ -128,7 +134,7 @@ public class NewReportActivity extends AppCompatActivity {
         }
 
         mNewPhotoImgButton.setOnClickListener(v -> startActivityForResult(captureImage, REQUEST_PHOTO));
-        updatePatientPhoto();
+     //   updatePatientPhoto();
     }
 
     @Override
@@ -137,6 +143,18 @@ public class NewReportActivity extends AppCompatActivity {
         if (requestCode == REQUEST_PHOTO) {
             updatePatientPhoto();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.new_report_toolbar_menu, menu);
+        return true;
+    }
+
+    private void shared() {
+        Intent i = new Intent(this, SharedPdfActivity.class);
+        startActivity(i);
     }
 
     private void updatePatientPhoto() {
@@ -149,19 +167,25 @@ public class NewReportActivity extends AppCompatActivity {
             // Create a shiny new (but blank) PDF document in memory
             // We want it to optionally be printable, so add PrintAttributes
             // and use a PrintedPdfDocument. Simpler: new PdfDocument().
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int height = displayMetrics.heightPixels;
+            int width = displayMetrics.widthPixels;
             PrintAttributes printAttrs = new PrintAttributes.Builder().
                     setColorMode(PrintAttributes.COLOR_MODE_COLOR).
                     setMediaSize(PrintAttributes.MediaSize.NA_LETTER).
-                    setResolution(new PrintAttributes.Resolution("zooey", PRINT_SERVICE, 300, 300)).
+                    setResolution(new PrintAttributes.Resolution("zooey", PRINT_SERVICE, width, height)).
                     setMinMargins(PrintAttributes.Margins.NO_MARGINS).
                     build();
             PdfDocument document = new PrintedPdfDocument(this, printAttrs);
             // crate a page description
-            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(300, 300, 1).create();
+            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(width, height, 1).create();
             // create a new page from the PageInfo
             PdfDocument.Page page = document.startPage(pageInfo);
+
+            RelativeLayout r = findViewById(R.id.relative);
             // repaint the user's text into the page
-            mPatientMainPhoto.draw(page.getCanvas());
+            r.draw(page.getCanvas());
             // do final processing of the page
             document.finishPage(page);
             // Here you could add more pages in a longer doc app, but you'd have
@@ -291,6 +315,9 @@ public class NewReportActivity extends AppCompatActivity {
 
         if (item.getItemId() == android.R.id.home) {
             finish();
+            return true;
+        }  else if (item.getItemId() == R.id.action_export) {
+            shared();
             return true;
         }
         return super.onOptionsItemSelected(item);

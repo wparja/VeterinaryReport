@@ -27,4 +27,7 @@
     <string name="init_at">Inicio</string>
     <string name="end_at">Fim</string>
     <string name="export">Exportar</string>
+    <string name="find">Localizar</string>
+    <string name="settings">Configurações</string>
+    <string name="shared">Compartilhar</string>
 </resources>
