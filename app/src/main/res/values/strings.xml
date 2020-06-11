@@ -9,7 +9,7 @@
     <string name="male">Macho</string>
     <string name="female">Fêmea</string>
     <string name="save">Salvar</string>
-    <string name="name">Name</string>
+    <string name="name">Nome</string>
     <string name="age">Idade</string>
     <string name="weight">Peso</string>
     <string name="owner">Responsável</string>
@@ -30,4 +30,15 @@
     <string name="find">Localizar</string>
     <string name="settings">Configurações</string>
     <string name="shared">Compartilhar</string>
+    <string name="patient_name_formatted">&lt;b>Nome:&lt;/b> %1$s</string>
+    <string name="specie_formatted">&lt;b>Espécie:&lt;/b> %1$s</string>
+    <string name="breed_formatted">&lt;b>Raça:&lt;/b> %1$s</string>
+    <string name="gender_formatted">&lt;b>Gênero:&lt;/b> %1$s</string>
+    <string name="age_formatted">&lt;b>Idade:&lt;/b> %1$s</string>
+    <string name="weight_formatted">&lt;b>Peso:&lt;/b> %1$s</string>
+    <string name="owner_formatted">&lt;b>Responsável:&lt;/b> %1$s</string>
+    <string name="clinic">Clínica</string>
+    <string name="medical_team">Equipe médica</string>
+    <string name="anesthetic_procedure_performed">Procedimento Anestésico Realizado</string>
+    <string name="anamnesis">Anamnese (fornecido pelo clínico)</string>
 </resources>

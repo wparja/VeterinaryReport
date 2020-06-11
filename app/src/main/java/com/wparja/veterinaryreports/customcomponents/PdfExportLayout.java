@@ -18,13 +18,9 @@ public class PdfExportLayout extends LinearLayout {
 
     TextView mTextViewPatientName;
     ImageView mImageViewPatientPhoto;
-    int w;
-    int h;
 
-    public PdfExportLayout(Context context, int w, int h) {
+    public PdfExportLayout(Context context) {
         super(context);
-        this.w =w;
-        this.h = h;
         init();
     }
 
@@ -43,7 +39,6 @@ public class PdfExportLayout extends LinearLayout {
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.pdf_export_layout, this);
-        setLayoutParams(new LinearLayout.LayoutParams(w, h));
         mTextViewPatientName = findViewById(R.id.patient_name_text_view);
         mImageViewPatientPhoto = findViewById(R.id.patient_photo_image_view);
 
