@@ -26,13 +26,32 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Jpeg;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.GrayColor;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.wparja.veterinaryreports.customcomponents.PdfExportLayout;
 import com.wparja.veterinaryreports.persistence.entities.ReportEntity;
 import com.wparja.veterinaryreports.utils.PhotoUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class SharedPdfActivity extends AppCompatActivity {
 
@@ -182,6 +201,185 @@ public class SharedPdfActivity extends AppCompatActivity {
         }
     }
 
+    private void shared4() {
+
+        String[] header = new String[] {"Dra Tábata Torres Megda",
+                "Graduação Medicina Veterinária UFLA",
+                "Residência Anestesiologia de Pequenos Animais UFMG",
+                "Mestre ênfase em Anestesiologia UFMG"};
+
+        try {
+            Document document = new Document();
+            File pdfDirPath = new File(getFilesDir(), "pdfs");
+            File file = new File(pdfDirPath, "pdfsendiText.pdf");
+            PdfWriter.getInstance(document, new FileOutputStream(file));
+            document.open();
+
+            document.setPageSize(PageSize.A4);
+
+            // LINE SEPARATOR
+            LineSeparator lineSeparator = new LineSeparator();
+            lineSeparator.setLineColor(new BaseColor(0, 0, 0, 68));
+            lineSeparator.setOffset(10);
+
+            for (String s : header) {
+                Paragraph paragraph = new Paragraph(s);
+                paragraph.setAlignment(Element.ALIGN_RIGHT);
+                document.add(paragraph);
+            }
+
+            Font headerFont = new Font();
+            headerFont.setSize(20.0f);
+            headerFont.setStyle(Font.BOLD);
+            Chunk titleChunk = new Chunk("Relatório de Procedimento Anestésico", headerFont);
+            Paragraph titleParagraph = new Paragraph(titleChunk);
+            titleParagraph.setAlignment(Element.ALIGN_CENTER);
+            document.add(titleParagraph);
+            document.add(new Chunk(lineSeparator));
+
+            PdfPTable tableAll = new PdfPTable(2);
+            tableAll.setSpacingAfter(20);
+            PdfPTable tableInformation = new PdfPTable(2);
+
+            PdfPCell cellNameHeader = new PdfPCell(new Phrase("Nome"));
+            cellNameHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            tableInformation.addCell(cellNameHeader);
+
+            PdfPCell cellNameValue = new PdfPCell(new Phrase("Merriti xibiu"));
+            cellNameValue.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            tableInformation.addCell(cellNameValue);
+
+            PdfPCell cellOwnerHeader = new PdfPCell(new Phrase("Responsável"));
+            cellOwnerHeader.setBackgroundColor(BaseColor.WHITE);
+            tableInformation.addCell(cellOwnerHeader);
+
+            PdfPCell cellOwnerValue = new PdfPCell(new Phrase("Tábata Popozuda"));
+            cellOwnerValue.setBackgroundColor(BaseColor.WHITE);
+            tableInformation.addCell(cellOwnerValue);
+
+            PdfPCell cellSpecieHeader = new PdfPCell(new Phrase("Espécie"));
+            cellSpecieHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            tableInformation.addCell(cellSpecieHeader);
+
+            PdfPCell cellSpecieValue = new PdfPCell(new Phrase("Canina"));
+            cellSpecieValue.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            tableInformation.addCell(cellSpecieValue);
+
+            PdfPCell cellBreedHeader = new PdfPCell(new Phrase("Raça"));
+            cellBreedHeader.setBackgroundColor(BaseColor.WHITE);
+            tableInformation.addCell(cellBreedHeader);
+
+            PdfPCell cellBreedValue = new PdfPCell(new Phrase("Barraqueira"));
+            cellBreedValue.setBackgroundColor(BaseColor.WHITE);
+            tableInformation.addCell(cellBreedValue);
+
+            PdfPCell cellGenderHeader = new PdfPCell(new Phrase("Gênero"));
+            cellGenderHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            tableInformation.addCell(cellGenderHeader);
+
+            PdfPCell cellGenderValue = new PdfPCell(new Phrase("Fêmea"));
+            cellGenderValue.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            tableInformation.addCell(cellGenderValue);
+
+            PdfPCell cellAgeHeader = new PdfPCell(new Phrase("Idade"));
+            cellAgeHeader.setBackgroundColor(BaseColor.WHITE);
+            tableInformation.addCell(cellAgeHeader);
+
+            PdfPCell cellAgeValue = new PdfPCell(new Phrase("4 anos"));
+            cellAgeValue.setBackgroundColor(BaseColor.WHITE);
+            tableInformation.addCell(cellAgeValue);
+
+            PdfPCell cellWeightHeader = new PdfPCell(new Phrase("Peso"));
+            cellWeightHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            tableInformation.addCell(cellWeightHeader);
+
+            PdfPCell cellWeightValue = new PdfPCell(new Phrase("1 Tonelada"));
+            cellWeightValue.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            tableInformation.addCell(cellWeightValue);
+
+            PdfPCell cellInformation = new PdfPCell();
+            cellInformation.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellInformation.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cellInformation.addElement(tableInformation);
+
+            tableAll.addCell(cellInformation);
+            PdfPCell cellImage = new PdfPCell();
+            Image image = Image.getInstance(mPatientMainPhotoFile.getAbsolutePath());
+            cellImage.setImage(image);
+            cellImage.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellImage.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            tableAll.addCell(cellImage);
+            document.add(tableAll);
+
+            Font LabelFont = new Font();
+            LabelFont.setSize(12.0f);
+            LabelFont.setStyle(Font.BOLD);
+
+            Chunk clinicNameChunk = new Chunk("Clínica", LabelFont);
+            Paragraph clinicNameParagraph = new Paragraph(clinicNameChunk);
+            clinicNameParagraph.setAlignment(Element.ALIGN_LEFT);
+            document.add(clinicNameParagraph);
+            document.add(new Paragraph("Clínica veterinária"));
+            document.add(new Chunk(lineSeparator));
+
+            Chunk medicalTeamChunk = new Chunk("Equipe Médica", LabelFont);
+            Paragraph medicalTeamParagraph = new Paragraph(medicalTeamChunk);
+            medicalTeamParagraph.setAlignment(Element.ALIGN_LEFT);
+            document.add(medicalTeamParagraph);
+            document.add(new Paragraph("Wagner Patrick Arja, Tábata Torres Megda"));
+            document.add(new Chunk(lineSeparator));
+
+            Chunk diagnosticChunk = new Chunk("Diagnóstico", LabelFont);
+            Paragraph diagnosticParagraph = new Paragraph(diagnosticChunk);
+            diagnosticParagraph.setAlignment(Element.ALIGN_LEFT);
+            document.add(diagnosticParagraph);
+            document.add(new Paragraph("Limpeza de dente, castração e retirada de tumor"));
+            document.add(new Chunk(lineSeparator));
+
+            Chunk anestheticProcedurePerformedChunk = new Chunk("Procedimento anestésico realizado", LabelFont);
+            Paragraph anestheticProcedurePerformedParagraph = new Paragraph(anestheticProcedurePerformedChunk);
+            anestheticProcedurePerformedParagraph.setAlignment(Element.ALIGN_LEFT);
+            document.add(anestheticProcedurePerformedParagraph);
+            document.add(new Paragraph("Inalatória com x mg/kg, Inalatória com x mg/kg, Inalatória com x mg/kg,Inalatória com x mg/kg,Inalatória com x mg/kg Inalatória com x mg/kg, Inalatória com x mg/kg, Inalatória com x mg/kg,Inalatória com x mg/kg,Inalatória com x mg/kg"));
+            document.add(new Chunk(lineSeparator));
+
+            Chunk anamnesisChunk = new Chunk("Anamnese (fornecido pelo clínico)", LabelFont);
+            Paragraph anamnesisParagraph = new Paragraph(anamnesisChunk);
+            anamnesisParagraph.setAlignment(Element.ALIGN_LEFT);
+            document.add(anamnesisParagraph);
+            document.add(new Paragraph("Cão abatido, suspeita doença do carrapato, leish, 3 dias sem comer, deprimido e com dor na barriga"));
+            document.add(new Chunk(lineSeparator));
+
+            Chunk recommendationChunk = new Chunk("Recomendações", LabelFont);
+            Paragraph recommendationParagraph = new Paragraph(recommendationChunk);
+            recommendationParagraph.setAlignment(Element.ALIGN_LEFT);
+            document.add(recommendationParagraph);
+            document.add(new Paragraph("Repouso, alimentação 4 horas apos entrega do animal, passeio só apos 1 semana da cirugia, limitar agua por 3 dias, dipirona de 3 em 3 horas por 7 dias"));
+            document.add(new Chunk(lineSeparator));
+            document.add(new Paragraph(""));
+
+            Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.tabata_signature);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            icon.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            Image signature = Image.getInstance(stream.toByteArray());
+            signature.setAlignment(Image.RIGHT);
+            document.add(signature);
+
+            document.close();
+
+
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     //create bitmap from the ScrollView
     private Bitmap getBitmapFromView(View view, int height, int width) {
@@ -310,6 +508,6 @@ public class SharedPdfActivity extends AppCompatActivity {
 //    }
 
     public void export(View view) {
-        shared3();
+        shared4();
     }
 }
