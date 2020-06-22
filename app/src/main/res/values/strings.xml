@@ -41,4 +41,12 @@
     <string name="medical_team">Equipe médica</string>
     <string name="anesthetic_procedure_performed">Procedimento Anestésico Realizado</string>
     <string name="anamnesis">Anamnese (fornecido pelo clínico)</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Patient_info">Paciente</string>
+    <string name="procedure">Procedimento</string>
+    <string name="patient_name">Nome do paciente</string>
+    <string name="months">Meses</string>
+    <string name="kilos">Quilos</string>
+    <string name="grams">Gramas</string>
 </resources>

@@ -55,24 +55,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         getSupportActionBar().setTitle(R.string.app_name);
-
-        PdfDocument export = new PdfDocument();
-        Paint paint = new Paint();
-
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(250,400, 1).create();
-        PdfDocument.Page page = export.startPage(pageInfo);
-        Canvas canvas = page.getCanvas();
-
-        paint.setTextAlign(Paint.Align.LEFT);
-        paint.setTextSize(12f);
-        canvas.drawText("Dra Tábata Torres Megda", pageInfo.getPageWidth()/2, 10, paint);
-
-        File file = new File(Environment.getExternalStorageState(), "/Test.pdf");
-
-        try {
-            export.writeTo(new FileOutputStream(file));
-        } catch (Exception ignore){}
-
     }
 
     public void callActivity(View view) {
