@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 
 import com.wparja.veterinaryreports.customcomponents.PdfExportLayout;
 import com.wparja.veterinaryreports.persistence.entities.ReportEntity;
+import com.wparja.veterinaryreports.utils.FileHelper;
 import com.wparja.veterinaryreports.utils.PictureUtils;
 
 import java.io.File;

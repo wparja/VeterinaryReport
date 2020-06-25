@@ -17,7 +17,7 @@
             android:id="@+id/new_report_card"
             android:clickable="true"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/card_height"
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:onClick="callActivity"
@@ -28,8 +28,8 @@
                 android:orientation="vertical"
                 android:gravity="center">
                 <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="@dimen/image_card_width"
+                    android:layout_height="@dimen/image_card_height"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/circleshape"
                     android:src="@drawable/ic_baseline_note_add_24"
@@ -46,7 +46,7 @@
             android:id="@+id/find_card"
             android:clickable="true"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/card_height"
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:onClick="callActivity"
@@ -57,8 +57,8 @@
                 android:orientation="vertical"
                 android:gravity="center">
                 <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="@dimen/image_card_width"
+                    android:layout_height="@dimen/image_card_height"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/circleshape"
                     android:src="@drawable/ic_baseline_find_in_page_24"
@@ -82,7 +82,7 @@
             android:id="@+id/settings_card"
             android:clickable="true"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/card_height"
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:onClick="callActivity"
@@ -93,8 +93,8 @@
                 android:orientation="vertical"
                 android:gravity="center">
                 <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="@dimen/image_card_width"
+                    android:layout_height="@dimen/image_card_height"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/circleshape"
                     android:src="@drawable/ic_baseline_settings_24"
@@ -112,7 +112,7 @@
             android:id="@+id/dosage_card"
             android:clickable="true"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/card_height"
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:onClick="callActivity"
@@ -123,8 +123,8 @@
                 android:orientation="vertical"
                 android:gravity="center">
                 <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="@dimen/image_card_width"
+                    android:layout_height="@dimen/image_card_height"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/circleshape"
                     android:src="@drawable/ic_calculator_black_24dp"

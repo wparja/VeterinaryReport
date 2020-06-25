@@ -45,6 +45,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.wparja.veterinaryreports.customcomponents.PdfExportLayout;
 import com.wparja.veterinaryreports.persistence.entities.ReportEntity;
+import com.wparja.veterinaryreports.utils.FileHelper;
 import com.wparja.veterinaryreports.utils.PhotoUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -202,7 +203,7 @@ public class SharedPdfActivity extends AppCompatActivity {
         }
     }
 
-    private void shared4() {
+    private void shared4() throws Exception {
 
         String[] header = new String[] {"Dra Tábata Torres Megda",
                 "Graduação Medicina Veterinária UFLA",
@@ -211,7 +212,7 @@ public class SharedPdfActivity extends AppCompatActivity {
 
         try {
             Document document = new Document();
-            File pdfDirPath = new File(getFilesDir(), "pdfs");
+            File pdfDirPath = FileHelper.getFilesFolder(getApplicationContext(),"teste");
             File file = new File(pdfDirPath, "pdfsendiText.pdf");
             PdfWriter.getInstance(document, new FileOutputStream(file));
             document.open();
@@ -516,6 +517,11 @@ public class SharedPdfActivity extends AppCompatActivity {
 //    }
 
     public void export(View view) {
-        shared4();
+
+        try {
+            shared4();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
