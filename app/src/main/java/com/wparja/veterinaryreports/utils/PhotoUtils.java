@@ -1,7 +1,14 @@
 package com.wparja.veterinaryreports.utils;
 
+import android.app.Activity;
 import android.content.Context;
-import android.os.Environment;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
+
+import androidx.core.content.FileProvider;
+
+import com.wparja.veterinaryreports.BuildConfig;
 
 import java.io.File;
 

@@ -212,7 +212,7 @@ public class SharedPdfActivity extends AppCompatActivity {
 
         try {
             Document document = new Document();
-            File pdfDirPath = FileHelper.getFilesFolder(getApplicationContext(),"teste");
+            File pdfDirPath = FileHelper.getFilesFolder("Temp");
             File file = new File(pdfDirPath, "pdfsendiText.pdf");
             PdfWriter.getInstance(document, new FileOutputStream(file));
             document.open();

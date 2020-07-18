@@ -1,18 +1,16 @@
 package com.wparja.veterinaryreports;
 
 import android.app.Application;
-import android.content.Context;
-import android.os.Environment;
-import android.util.Log;
 
 import com.wparja.veterinaryreports.data.DataProvider;
+import com.wparja.veterinaryreports.logging.LoggerHelper;
+import com.wparja.veterinaryreports.utils.FileHelper;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class VeterinaryReports extends Application {
@@ -20,31 +18,25 @@ public class VeterinaryReports extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-      //  Thread.setDefaultUncaughtExceptionHandler(new VeterinaryReportsExceptionHandler(getApplicationContext()));
+        Thread.setDefaultUncaughtExceptionHandler(new VeterinaryReportsExceptionHandler());
         DataProvider.getInstance().init(getApplicationContext());
     }
 
     private class VeterinaryReportsExceptionHandler implements Thread.UncaughtExceptionHandler {
 
         private Thread.UncaughtExceptionHandler defaultUEH;
-        private Context app = null;
         private File folder;
 
-        public VeterinaryReportsExceptionHandler(Context applicationContext) {
-            this.defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
-            this.app = app;
-            folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/VeterinaryReports/");
-            if (!folder.exists()) {
-                folder.mkdir();
-            }
+        public VeterinaryReportsExceptionHandler() {
             try {
+                this.defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
+                folder = FileHelper.getFolder("Logs");
+                if (!folder.exists()) {
+                    folder.mkdir();
+                }
+
                 List<File> files = Arrays.asList(folder.listFiles());
-                Collections.sort(files, new Comparator<File>() {
-                    @Override
-                    public int compare(File o1, File o2) {
-                        return ((int)o1.lastModified()) - ((int)o2.lastModified());
-                    }
-                });
+                Collections.sort(files, (o1, o2) -> ((int) o1.lastModified()) - ((int) o2.lastModified()));
                 int index = 0;
                 int size = files.size();
                 while (size > 3) {
@@ -54,9 +46,10 @@ public class VeterinaryReports extends Application {
                 }
 
             } catch (Exception ex) {
-                Log.i("VeterinaryReports", "VeterinaryReportsExceptionHandler: " + ex.getMessage());
+                LoggerHelper.getInstance().logError(ex.getMessage());
             }
         }
+
         public void uncaughtException(Thread t, Throwable e) {
             StackTraceElement[] arr = e.getStackTrace();
             String report = e.toString() + "\n\n";
@@ -81,8 +74,8 @@ public class VeterinaryReports extends Application {
             report += "-------------------------------\n\n";
 
             try {
-                File strace = new File(folder, "VeterinaryReportsError.txt");
-                FileWriter writer = new FileWriter(strace);
+                File trace = new File(folder, "FatalError.txt");
+                FileWriter writer = new FileWriter(trace);
                 writer.append(report);
                 writer.flush();
                 writer.close();

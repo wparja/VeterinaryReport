@@ -37,14 +37,13 @@ import java.util.stream.Collectors;
  */
 public class PatientDataFragment extends Fragment {
 
-    private static final int REQUEST_PHOTO = 2;
+
 
     List<Specie> mSpecies;
     Spinner mGendersSpinner;
     AutoCompleteTextView mSpeciesActv;
     AutoCompleteTextView mBreedsActv;
     ImageButton mNewPhotoImgButton;
-    File mPatientMainPhotoFile;
     ImageView mPatientMainPhoto;
 
     public PatientDataFragment() {
@@ -78,17 +77,7 @@ public class PatientDataFragment extends Fragment {
 
         fillAndSetListenerSpecieAutoCompleteTextView();
 
-//        mPatientMainPhotoFile = PhotoUtils.getPhoto(getActivity(), "mainPhoto1.jpg");
-//
-//        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        boolean canTackPhoto = mPatientMainPhotoFile != null && captureImage.resolveActivity(getActivity().getPackageManager()) != null;
-//
-//        if (canTackPhoto) {
-//            Uri uri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID +".fileprovider", mPatientMainPhotoFile);
-//            captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-//        }
-//
-//        mNewPhotoImgButton.setOnClickListener(v -> startActivityForResult(captureImage, REQUEST_PHOTO));
+
         return view;
     }
 

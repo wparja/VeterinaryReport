@@ -49,4 +49,9 @@
     <string name="months">Meses</string>
     <string name="kilos">Quilos</string>
     <string name="grams">Gramas</string>
+    <string name="save_all_data">Salvar dados do procedimento</string>
+    <string name="shared_this_procedure">Compartilhar com contatos</string>
+    <string name="photo">Foto</string>
+    <string name="attach_new_photo">Adicionar foto ao procedimento</string>
+    <string name="gallery">Galeria</string>
 </resources>

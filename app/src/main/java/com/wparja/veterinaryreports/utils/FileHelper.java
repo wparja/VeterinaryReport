@@ -1,58 +1,43 @@
 package com.wparja.veterinaryreports.utils;
 
-import android.content.Context;
 import android.os.Environment;
-
 import java.io.File;
 
 public class FileHelper {
 
-    public static final String BASE_FOLDER = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Veterinary Reports/";
-    public static final String PHOTOS = "/photos/";
-    public static final String FILES = "/files/";
+    public static final String PHOTOS = "photos/";
+    public static final String FILES = "files/";
+    public static final String ROOT_FOLDER = "/Veterinary Reports/";
 
-    public static File geMainFolder(Context context, String folderName) throws Exception {
-        String baseFolder = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
-        File mainFolder = new File(baseFolder + folderName);
-        boolean success = true;
-        if (!mainFolder.exists()) {
-            success = mainFolder.mkdirs();
-        }
-
-        if (!success) {
-            throw new Exception();
-        }
-
-        return mainFolder;
+    public static File getRootFolder() throws Exception {
+        return createFolder(Environment.getExternalStorageDirectory(), ROOT_FOLDER);
     }
 
-    public static File gePhotoFolder(Context context, String folderName) throws Exception {
-        String baseFolder = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
-        boolean success = true;
-        File photosFolder = new File(baseFolder + folderName + PHOTOS);
-        if (!photosFolder.exists()) {
-            success = photosFolder.mkdirs();
-        }
-
-        if (!success) {
-            throw new Exception();
-        }
-
-        return photosFolder;
+    public static File getFolder(String folderName) throws Exception {
+        return createFolder(getRootFolder(), folderName);
     }
 
-    public static File getFilesFolder(Context context, String folderName) throws Exception {
-        String baseFolder = context.getExternalFilesDir(null).getAbsolutePath() + "/";
+    public static File gePhotoFolder(String folderName) throws Exception {
+        File mainFolder = createFolder(getRootFolder(), folderName);
+        return createFolder(mainFolder, PHOTOS);
+    }
+
+    public static File getFilesFolder(String folderName) throws Exception {
+        File mainFolder = createFolder(getRootFolder(), folderName);
+        return createFolder(mainFolder, FILES);
+    }
+
+    private static File createFolder(File root, String folderName) throws Exception {
+        File folder = new File(root, folderName);
         boolean success = true;
-        File filesFolder = new File(baseFolder + folderName + FILES);
-        if (!filesFolder.exists()) {
-            success = filesFolder.mkdirs();
+        if (!folder.exists()) {
+            success = folder.mkdir();
         }
 
         if (!success) {
             throw new Exception();
         }
 
-        return filesFolder;
+        return folder;
     }
 }
