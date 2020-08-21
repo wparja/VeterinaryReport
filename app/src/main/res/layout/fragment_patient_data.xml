@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
                     <EditText
-                        android:id="@+id/patient_mouth"
+                        android:id="@+id/patient_months"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
@@ -96,20 +96,6 @@
                         android:layout_marginStart="8dp"
                         android:inputType="numberDecimal"
                         android:hint="@string/kilos"/>
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-                    <EditText
-                        android:id="@+id/patient_gram"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:layout_marginStart="8dp"
-                        android:ems="10"
-                        android:inputType="numberDecimal"
-                        android:hint="@string/grams"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </LinearLayout>

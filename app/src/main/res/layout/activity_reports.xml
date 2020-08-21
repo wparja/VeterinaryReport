@@ -13,6 +13,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.08">
         <EditText
+            android:id="@+id/search_edit_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -25,7 +26,8 @@
             android:onClick="search"
             android:background="@drawable/ic_search_black_24dp"/>
     </LinearLayout>
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/patient_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>

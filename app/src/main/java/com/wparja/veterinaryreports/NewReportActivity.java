@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.wparja.veterinaryreports.fragments.PatientDataFragment;
 import com.wparja.veterinaryreports.fragments.PhotoGalleryFragment;
 import com.wparja.veterinaryreports.fragments.ProcedureFragment;
 import com.wparja.veterinaryreports.logging.LoggerHelper;
+import com.wparja.veterinaryreports.persistence.entities.Report;
 import com.wparja.veterinaryreports.utils.FileHelper;
 
 import java.io.File;
@@ -36,25 +38,40 @@ import java.util.List;
 
 public class NewReportActivity extends AppCompatActivity {
 
+    private static final String ARG = "ARG";
     private static final int REQUEST_PHOTO = 2;
 
     private Toolbar mToolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    BoomMenuButton bmb;
+    private BoomMenuButton bmb;
 
     private PatientDataFragment mPatientDataFragment;
     private ProcedureFragment mProcedureFragment;
     private PhotoGalleryFragment mPhotoGalleryFragment;
+    private Report mPatient;
 
     private List<Fragment> mFragments = new ArrayList<>();
+
+    public static Intent newInstance(Context context, Report report) {
+        Intent intent = new Intent(context, NewReportActivity.class);
+        intent.putExtra(ARG, report);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_report);
 
-        mPatientDataFragment = PatientDataFragment.newInstance();
+        if (getIntent() != null) {
+            mPatient = (Report) getIntent().getSerializableExtra(ARG);
+            if (mPatient == null) {
+                mPatient = new Report();
+            }
+        }
+
+        mPatientDataFragment = PatientDataFragment.newInstance(mPatient);
         mFragments.add(mPatientDataFragment);
 
         mProcedureFragment = ProcedureFragment.newInstance();
@@ -74,12 +91,16 @@ public class NewReportActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.new_procedure_tab_layout);
         FragmentPagerAdapter fragmentPagerAdapter = new NewProcedurePagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(fragmentPagerAdapter);
+        viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
 
         bmb = findViewById(R.id.bmb);
         HamButton.Builder builderSave = new HamButton.Builder()
                 .normalImageRes(R.drawable.ic_baseline_save_white_24)
                 .normalTextRes(R.string.save)
+                .listener(index -> {
+                   save();
+                })
                 .subNormalTextRes(R.string.save_all_data);
         bmb.addBuilder(builderSave);
 
@@ -93,14 +114,11 @@ public class NewReportActivity extends AppCompatActivity {
                 .normalImageRes(R.drawable.ic_add_a_photo_white_24dp)
                 .normalTextRes(R.string.photo)
                 .subNormalTextRes(R.string.attach_new_photo)
-                .listener(new OnBMClickListener() {
-                    @Override
-                    public void onBoomButtonClick(int index) {
-                        try {
-                            takePhoto();
-                        } catch (Exception e) {
-                            LoggerHelper.getInstance().logError("Error taken photo" + e.getMessage());
-                        }
+                .listener(index -> {
+                    try {
+                        takePhoto();
+                    } catch (Exception e) {
+                        LoggerHelper.getInstance().logError("Error taken photo" + e.getMessage());
                     }
                 });
         bmb.addBuilder(builderPhoto);
@@ -147,13 +165,8 @@ public class NewReportActivity extends AppCompatActivity {
     }
 
 
-
-    public void save(View view) {
-        String specieName = mPatientDataFragment.getSpecieSelected();
-        String breedName = mPatientDataFragment.getBreedSelected();
-        DataProvider.getInstance().saveSpecie(specieName, breedName);
-        DataProvider.getInstance().saveExams(mProcedureFragment.getExamsSelected());
-        DataProvider.getInstance().saveDiagnostic(mProcedureFragment.getDiagnosticsSelected());
+    public void save() {
+        DataProvider.getInstance().savePatient(mPatient);
     }
 
     class NewProcedurePagerAdapter extends FragmentPagerAdapter {

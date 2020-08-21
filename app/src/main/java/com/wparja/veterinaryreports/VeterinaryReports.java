@@ -35,16 +35,17 @@ public class VeterinaryReports extends Application {
                     folder.mkdir();
                 }
 
-                List<File> files = Arrays.asList(folder.listFiles());
-                Collections.sort(files, (o1, o2) -> ((int) o1.lastModified()) - ((int) o2.lastModified()));
-                int index = 0;
-                int size = files.size();
-                while (size > 3) {
-                    files.get(index).delete();
-                    index++;
-                    size--;
+                if (folder.listFiles() != null) {
+                    List<File> files = Arrays.asList(folder.listFiles());
+                    Collections.sort(files, (o1, o2) -> ((int) o1.lastModified()) - ((int) o2.lastModified()));
+                    int index = 0;
+                    int size = files.size();
+                    while (size > 3) {
+                        files.get(index).delete();
+                        index++;
+                        size--;
+                    }
                 }
-
             } catch (Exception ex) {
                 LoggerHelper.getInstance().logError(ex.getMessage());
             }

@@ -1,8 +1,6 @@
 package com.wparja.veterinaryreports.customcomponents;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -12,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.wparja.veterinaryreports.R;
-import com.wparja.veterinaryreports.persistence.entities.ReportEntity;
+import com.wparja.veterinaryreports.persistence.entities.Report;
 
 public class PdfExportLayout extends LinearLayout {
 
@@ -39,15 +37,15 @@ public class PdfExportLayout extends LinearLayout {
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.pdf_export_layout, this);
-        mTextViewPatientName = findViewById(R.id.patient_name_text_view);
-        mImageViewPatientPhoto = findViewById(R.id.patient_photo_image_view);
+//        mTextViewPatientName = findViewById(R.id.patient_name_text_view);
+//        mImageViewPatientPhoto = findViewById(R.id.patient_photo_image_view);
 
     }
 
-    public void bind(ReportEntity reportEntity) {
-        mTextViewPatientName.setText(reportEntity.getPatientName());
-        Bitmap bitmap = BitmapFactory.decodeFile(reportEntity.getPatientMainPhoto());
-        mImageViewPatientPhoto.setImageBitmap(bitmap);
-        mImageViewPatientPhoto.setRotation(90);
+    public void bind(Report report) {
+//        mTextViewPatientName.setText(report.getPatientName());
+//        Bitmap bitmap = BitmapFactory.decodeFile(report.getPatientMainPhoto());
+//        mImageViewPatientPhoto.setImageBitmap(bitmap);
+//        mImageViewPatientPhoto.setRotation(90);
     }
 }

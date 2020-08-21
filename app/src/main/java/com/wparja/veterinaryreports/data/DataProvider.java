@@ -8,6 +8,7 @@ import com.wparja.veterinaryreports.persistence.entities.Exams;
 import com.wparja.veterinaryreports.persistence.entities.Report;
 import com.wparja.veterinaryreports.persistence.entities.Specie;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,12 +25,10 @@ public class DataProvider {
     private Diagnostics mDiagnostics;
     private Exams mExams;
     private Clinics mClinics;
-    private List<Report> mReports = new ArrayList<>();
 
     public void init(Context context) {
         mPersistenceManager = new PersistenceManager(context);
     }
-
 
     private DataProvider() {
     }
@@ -83,7 +82,6 @@ public class DataProvider {
     }
 
     public void saveDiagnostic(List<String> diagnostics) {
-
         boolean save = false;
         for (String diagnostic : diagnostics) {
             if (!mDiagnostics.getItems().contains(diagnostic)) {
@@ -116,5 +114,19 @@ public class DataProvider {
             mClinics.getItems().add(clinicName);
             mPersistenceManager.persist(mClinics);
         }
+    }
+
+    public void savePatient(Report patient) {
+        // todo create a folder
+        // move all photo inside temp to new folder
+        // delete all photo from temp
+        saveSpecie(patient.getPatientSpecie(), patient.getPatientBreed());
+        saveExams(patient.getExams());
+        saveDiagnostic(patient.getDiagnostics());
+        mPersistenceManager.persist(patient);
+    }
+
+    public List<Report> search(String criteria) throws SQLException {
+        return mPersistenceManager.getQueryBuilder(Report.class).where().eq("patient_name", criteria).query();
     }
 }

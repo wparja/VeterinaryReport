@@ -1,28 +1,26 @@
 package com.wparja.veterinaryreports.fragments;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.wparja.veterinaryreports.R;
-import com.wparja.veterinaryreports.utils.FileHelper;
+import com.wparja.veterinaryreports.utils.loadGallery.ThumbnailLoaderPhoto;
 
-import java.io.File;
-import java.util.Arrays;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class PhotoGalleryFragment extends Fragment {
@@ -32,6 +30,10 @@ public class PhotoGalleryFragment extends Fragment {
 
     private String mPhotoFolderPath;
     private RecyclerView mRecyclerViewPhoto;
+    private ThumbnailLoaderPhoto mThumbnailLoaderPhoto;
+    private Handler mHandlerResponse;
+    private List<Bitmap> mBitmaps = new ArrayList<>();
+    private PhotoAdapter mPhotoAdapter;
 
 
     public PhotoGalleryFragment() {
@@ -50,6 +52,29 @@ public class PhotoGalleryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        mPhotoAdapter = new PhotoAdapter();
+        mHandlerResponse = new Handler() {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                Bitmap b = (Bitmap) msg.obj;
+                mBitmaps.add(b);
+                mPhotoAdapter.notifyDataSetChanged();
+
+            }
+        };
+        mThumbnailLoaderPhoto = new ThumbnailLoaderPhoto(mHandlerResponse);
+        mThumbnailLoaderPhoto.start();
+        mThumbnailLoaderPhoto.getLooper();
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                mThumbnailLoaderPhoto.queueThumbnail("Temp");
+                return null;
+            }
+        }.execute();
+
+
         if (getArguments() != null) {
             mPhotoFolderPath = getArguments().getString(ARG_PHOTO_FOLDER_PATH);
         }
@@ -62,24 +87,23 @@ public class PhotoGalleryFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_photo_gallery, container, false);
         mRecyclerViewPhoto = view.findViewById(R.id.photo_recycler_view);
         mRecyclerViewPhoto.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        setupAdapter();
+        mRecyclerViewPhoto.setHasFixedSize(true);
+        mRecyclerViewPhoto.setItemViewCacheSize(20);
+        mRecyclerViewPhoto.setDrawingCacheEnabled(true);
+        mRecyclerViewPhoto.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        mRecyclerViewPhoto.setAdapter(mPhotoAdapter);
         return view;
-    }
-
-    private void setupAdapter() {
-        if (isAdded()) {
-            try {
-                File photos = FileHelper.gePhotoFolder("Temp");
-                mRecyclerViewPhoto.setAdapter(new PhotoAdapter(Arrays.asList(photos.listFiles())));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mThumbnailLoaderPhoto.quit();
     }
 
     private class PhotoHolder extends RecyclerView.ViewHolder {
@@ -91,17 +115,14 @@ public class PhotoGalleryFragment extends Fragment {
             mImageViewPhoto = (ImageView) itemView;
         }
 
-        public void bind(File photo) {
-            mImageViewPhoto.setImageBitmap(BitmapFactory.decodeFile(photo.getAbsolutePath()));
+        public void bind(Bitmap photo) {
+            mImageViewPhoto.setImageBitmap(photo);
         }
     }
 
     private class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
 
-        private List<File> mPhotoList;
-
-        public PhotoAdapter(List<File> photoList) {
-            mPhotoList = photoList;
+        public PhotoAdapter() {
         }
 
         @NonNull
@@ -114,13 +135,13 @@ public class PhotoGalleryFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull PhotoHolder holder, int position) {
-            File photo = mPhotoList.get(position);
+            Bitmap photo = mBitmaps.get(position);
             holder.bind(photo);
         }
 
         @Override
         public int getItemCount() {
-            return mPhotoList.size();
+            return mBitmaps.size();
         }
     }
 

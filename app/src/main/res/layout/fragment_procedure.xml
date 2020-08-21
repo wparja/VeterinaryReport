@@ -7,6 +7,40 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ProcedureFragment">
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/clinic_name_text_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/colorAccent"
+        android:layout_marginTop="16dp">
+        <EditText
+            android:id="@+id/clinic_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="14sp"
+            android:focusableInTouchMode="false"
+            android:drawablePadding="8dp"
+            android:hint="@string/clinic_name"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/surgeon_text_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/colorAccent"
+        android:layout_marginTop="16dp">
+        <EditText
+            android:id="@+id/surgeon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="14sp"
+            android:focusableInTouchMode="false"
+            android:drawablePadding="8dp"
+            android:hint="@string/surgeon"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/previous_exams_text_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

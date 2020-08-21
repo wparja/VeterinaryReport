@@ -54,4 +54,7 @@
     <string name="photo">Foto</string>
     <string name="attach_new_photo">Adicionar foto ao procedimento</string>
     <string name="gallery">Galeria</string>
+    <string name="clinic_name">Clinic name</string>
+    <string name="surgeon">Cirurgião</string>
+    <string name="date">Data</string>
 </resources>
