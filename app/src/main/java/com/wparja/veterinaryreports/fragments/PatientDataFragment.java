@@ -130,23 +130,23 @@ public class PatientDataFragment extends Fragment {
                 if (specie.isPresent()) {
                     ArrayAdapter<String> breedsAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, specie.get().getItems());
                     mBreedsActv.setAdapter(breedsAdapter);
-                    mBreedsActv.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            mPatient.setPatientBreed(s.toString());
-                        }
-                    });
                 }
+                mBreedsActv.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        mPatient.setPatientBreed(s.toString());
+                    }
+                });
             }
 
             @Override

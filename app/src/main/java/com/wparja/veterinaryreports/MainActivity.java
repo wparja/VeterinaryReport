@@ -7,14 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import java.io.OutputStream;
-
 public class MainActivity extends AppCompatActivity {
 
     Toolbar mToolbar;
-    private Intent mShareIntent;
-
-    private OutputStream os;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent activity;
         if (view.getId() == R.id.new_report_card) {
-            activity = new Intent(this, NewReportActivity.class);
+            activity = new Intent(this, NewProcedureActivity.class);
         } else {
-            activity = new Intent(this, ReportsActivity.class);
+            activity = new Intent(this, ProceduresActivity.class);
         }
 
         startActivity(activity);

@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class VeterinaryReports extends Application {
+public class VeterinaryReportsApp extends Application {
 
     @Override
     public void onCreate() {
@@ -22,7 +22,7 @@ public class VeterinaryReports extends Application {
         DataProvider.getInstance().init(getApplicationContext());
     }
 
-    private class VeterinaryReportsExceptionHandler implements Thread.UncaughtExceptionHandler {
+    private static class VeterinaryReportsExceptionHandler implements Thread.UncaughtExceptionHandler {
 
         private Thread.UncaughtExceptionHandler defaultUEH;
         private File folder;
@@ -30,7 +30,7 @@ public class VeterinaryReports extends Application {
         public VeterinaryReportsExceptionHandler() {
             try {
                 this.defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
-                folder = FileHelper.getFolder("Logs");
+                folder = FileHelper.geLogsFolder("Logs");
                 if (!folder.exists()) {
                     folder.mkdir();
                 }
@@ -53,31 +53,31 @@ public class VeterinaryReports extends Application {
 
         public void uncaughtException(Thread t, Throwable e) {
             StackTraceElement[] arr = e.getStackTrace();
-            String report = e.toString() + "\n\n";
-            report += "--------- Stack trace ---------\n\n";
-            for (int i = 0; i < arr.length; i++) {
-                report += "    " + arr[i].toString() + "\n";
+            StringBuilder report = new StringBuilder(e.toString() + "\n\n");
+            report.append("--------- Stack trace ---------\n\n");
+            for (StackTraceElement stackTraceElement : arr) {
+                report.append("    ").append(stackTraceElement.toString()).append("\n");
             }
-            report += "-------------------------------\n\n";
+            report.append("-------------------------------\n\n");
 
             // If the exception was thrown in a background thread inside
             // AsyncTask, then the actual exception can be found with getCause
 
-            report += "--------- Cause ---------\n\n";
+            report.append("--------- Cause ---------\n\n");
             Throwable cause = e.getCause();
             if (cause != null) {
-                report += cause.toString() + "\n\n";
+                report.append(cause.toString()).append("\n\n");
                 arr = cause.getStackTrace();
-                for (int i = 0; i < arr.length; i++) {
-                    report += "    " + arr[i].toString() + "\n";
+                for (StackTraceElement stackTraceElement : arr) {
+                    report.append("    ").append(stackTraceElement.toString()).append("\n");
                 }
             }
-            report += "-------------------------------\n\n";
+            report.append("-------------------------------\n\n");
 
             try {
                 File trace = new File(folder, "FatalError.txt");
                 FileWriter writer = new FileWriter(trace);
-                writer.append(report);
+                writer.append(report.toString());
                 writer.flush();
                 writer.close();
             } catch (IOException ioe) {

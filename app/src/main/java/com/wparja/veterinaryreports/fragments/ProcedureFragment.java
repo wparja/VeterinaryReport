@@ -1,16 +1,12 @@
 package com.wparja.veterinaryreports.fragments;
 
 import android.content.DialogInterface;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +15,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.wparja.veterinaryreports.NewReportActivity;
 import com.wparja.veterinaryreports.R;
 import com.wparja.veterinaryreports.data.DataProvider;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 

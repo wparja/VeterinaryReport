@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".NewReportActivity">
+    tools:context=".NewProcedureActivity">
 
     <include android:id="@+id/toolbar_layout" layout="@layout/toolbar" />
     <com.google.android.material.tabs.TabLayout

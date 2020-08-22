@@ -18,11 +18,9 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
 import com.nightonke.boommenu.BoomButtons.HamButton;
-import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.wparja.veterinaryreports.data.DataProvider;
 import com.wparja.veterinaryreports.fragments.PatientDataFragment;
@@ -36,7 +34,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewReportActivity extends AppCompatActivity {
+public class NewProcedureActivity extends AppCompatActivity {
 
     private static final String ARG = "ARG";
     private static final int REQUEST_PHOTO = 2;
@@ -54,7 +52,7 @@ public class NewReportActivity extends AppCompatActivity {
     private List<Fragment> mFragments = new ArrayList<>();
 
     public static Intent newInstance(Context context, Report report) {
-        Intent intent = new Intent(context, NewReportActivity.class);
+        Intent intent = new Intent(context, NewProcedureActivity.class);
         intent.putExtra(ARG, report);
         return intent;
     }
@@ -62,7 +60,7 @@ public class NewReportActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_report);
+        setContentView(R.layout.activity_new_procedure);
 
         if (getIntent() != null) {
             mPatient = (Report) getIntent().getSerializableExtra(ARG);

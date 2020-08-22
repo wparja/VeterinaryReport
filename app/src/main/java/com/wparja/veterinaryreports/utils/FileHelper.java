@@ -5,8 +5,9 @@ import java.io.File;
 
 public class FileHelper {
 
-    public static final String PHOTOS = "photos/";
-    public static final String FILES = "files/";
+    public static final String PHOTOS = "Photos/";
+    public static final String FILES = "Files/";
+    public static final String LOGS = "Logs/";
     public static final String ROOT_FOLDER = "/Veterinary Reports/";
 
     public static File getRootFolder() throws Exception {
@@ -20,6 +21,11 @@ public class FileHelper {
     public static File gePhotoFolder(String folderName) throws Exception {
         File mainFolder = createFolder(getRootFolder(), folderName);
         return createFolder(mainFolder, PHOTOS);
+    }
+
+    public static File geLogsFolder(String folderName) throws Exception {
+        File mainFolder = createFolder(getRootFolder(), folderName);
+        return createFolder(mainFolder, LOGS);
     }
 
     public static File getFilesFolder(String folderName) throws Exception {

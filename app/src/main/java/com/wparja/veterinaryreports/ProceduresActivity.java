@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReportsActivity extends AppCompatActivity {
+public class ProceduresActivity extends AppCompatActivity {
 
     Toolbar mToolbar;
     EditText mEditTextSearch;
@@ -31,7 +31,7 @@ public class ReportsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reports);
+        setContentView(R.layout.activity_procedures);
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -81,7 +81,7 @@ public class ReportsActivity extends AppCompatActivity {
             mTextViewProcedureName = itemView.findViewById(R.id.procedure_name);
             mTextViewProcedureDate = itemView.findViewById(R.id.procedure_date);
 
-            itemView.setOnClickListener( v -> startActivity(NewReportActivity.newInstance(ReportsActivity.this, mReport)));
+            itemView.setOnClickListener( v -> startActivity(NewProcedureActivity.newInstance(ProceduresActivity.this, mReport)));
         }
 
         private void bind(Report report) {
@@ -97,7 +97,7 @@ public class ReportsActivity extends AppCompatActivity {
         @NonNull
         @Override
         public PatientHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new PatientHolder(LayoutInflater.from(ReportsActivity.this).inflate(R.layout.patient_list_item, parent, false));
+            return new PatientHolder(LayoutInflater.from(ProceduresActivity.this).inflate(R.layout.patient_list_item, parent, false));
         }
 
         @Override
