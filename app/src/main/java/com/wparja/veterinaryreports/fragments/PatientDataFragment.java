@@ -161,7 +161,7 @@ public class PatientDataFragment extends Fragment {
         mGendersSpinner.setAdapter(genderAdapter);
         int selectionPosition = genderAdapter.getPosition(mPatient.getPatientGender());
         if (selectionPosition != -1) {
-            mGendersSpinner.setSelection(selectionPosition);
+            mGendersSpinner.setSelection(++selectionPosition);
         } else {
             mGendersSpinner.setSelection(0);
         }
@@ -169,8 +169,10 @@ public class PatientDataFragment extends Fragment {
         mGendersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String gender = (String) parent.getItemAtPosition(position);
-                mPatient.setPatientGender(gender);
+                if (position >= 0) {
+                    String gender = (String) parent.getItemAtPosition(position);
+                    mPatient.setPatientGender(gender);
+                }
             }
 
             @Override

@@ -14,10 +14,6 @@ public class FileHelper {
         return createFolder(Environment.getExternalStorageDirectory(), ROOT_FOLDER);
     }
 
-    public static File getFolder(String folderName) throws Exception {
-        return createFolder(getRootFolder(), folderName);
-    }
-
     public static File gePhotoFolder(String folderName) throws Exception {
         File mainFolder = createFolder(getRootFolder(), folderName);
         return createFolder(mainFolder, PHOTOS);

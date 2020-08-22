@@ -1,9 +1,14 @@
 package com.wparja.veterinaryreports.persistence.entities;
 
 
+import android.text.TextUtils;
+import android.widget.TextView;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import java.util.Collections;
 
 @DatabaseTable
 public class Report extends BaseEntity {
@@ -155,6 +160,9 @@ public class Report extends BaseEntity {
     public Items<String> getExams() {
         return mExams;
     }
+    public String getExamsFormatted() {
+        return TextUtils.join(", ", mExams);
+    }
 
     public void setExams(Items<String> exams) {
         mExams = exams;
@@ -162,6 +170,10 @@ public class Report extends BaseEntity {
 
     public Items<String> getDiagnostics() {
         return mDiagnostics;
+    }
+
+    public String getDiagnosticsFormatted(){
+        return TextUtils.join(", ", mDiagnostics);
     }
 
     public void setDiagnostics(Items<String> diagnostics) {

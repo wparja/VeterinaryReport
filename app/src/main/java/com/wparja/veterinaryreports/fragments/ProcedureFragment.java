@@ -6,7 +6,9 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +19,12 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wparja.veterinaryreports.R;
 import com.wparja.veterinaryreports.data.DataProvider;
+import com.wparja.veterinaryreports.persistence.entities.Items;
+import com.wparja.veterinaryreports.persistence.entities.Report;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,28 +34,36 @@ import java.util.List;
  */
 public class ProcedureFragment extends Fragment {
 
+    private static final String ARG = "ARG";
+
     EditText mExams;
-    TextView mDiagnostics;
+    EditText mDiagnostics;
     EditText mProcedurePerformed;
     ImageButton mProcedurePerformedImgBtn;
-    TextView mRecommendations;
-    TextView mHistory;
+    EditText mRecommendations;
+    EditText mHistory;
     List<String> mExamsSelected = new ArrayList<>();
     List<String> mDiagnosticsSelected = new ArrayList<>();
-
     TextInputLayout mTextInputLayout;
+    Report mPatient;
 
     public ProcedureFragment() {
         // Required empty public constructor
     }
 
-    public static ProcedureFragment newInstance() {
-        return new ProcedureFragment();
+    public static ProcedureFragment newInstance(Report report) {
+        ProcedureFragment procedureFragment = new ProcedureFragment();
+        Bundle arg = new Bundle();
+        arg.putSerializable(ARG, report);
+        procedureFragment.setArguments(arg);
+        return procedureFragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPatient = (Report) getArguments().getSerializable(ARG);
     }
 
     @Override
@@ -58,11 +72,28 @@ public class ProcedureFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_procedure, container, false);
         mExams = view.findViewById(R.id.previous_exams);
+        mExams.setText(mPatient.getExamsFormatted());
+        mExamsSelected.addAll(mPatient.getExams());
+        mExams.addTextChangedListener(new GenericTextWatcher(mExams));
+
         mDiagnostics = view.findViewById(R.id.diagnostics);
+        mDiagnostics.setText(mPatient.getDiagnosticsFormatted());
+        mDiagnosticsSelected.addAll(mPatient.getDiagnostics());
+        mDiagnostics.addTextChangedListener(new GenericTextWatcher(mDiagnostics));
+
         mProcedurePerformed = view.findViewById(R.id.procedure_performed);
-      //  mProcedurePerformedImgBtn = view.findViewById(R.id.procedure_performed_img_btn);
+        mProcedurePerformed.setText(mPatient.getProcedurePerformed());
+        mProcedurePerformed.addTextChangedListener(new GenericTextWatcher(mProcedurePerformed));
+
         mRecommendations = view.findViewById(R.id.recommendations);
+        mRecommendations.setText(mPatient.getRecommendations());
+        mRecommendations.addTextChangedListener(new GenericTextWatcher(mRecommendations));
+
         mHistory = view.findViewById(R.id.history);
+        mHistory.setText(mPatient.getMedicalHistory());
+        mHistory.addTextChangedListener(new GenericTextWatcher(mHistory));
+
+        //  mProcedurePerformedImgBtn = view.findViewById(R.id.procedure_performed_img_btn);
         mTextInputLayout = view.findViewById(R.id.previous_exams_text_input_layout);
 
         mExams.setOnClickListener(new View.OnClickListener() {
@@ -151,12 +182,42 @@ public class ProcedureFragment extends Fragment {
 
     }
 
-    public List<String> getExamsSelected() {
-        return mExamsSelected;
-    }
+    class GenericTextWatcher implements TextWatcher {
 
-    public List<String> getDiagnosticsSelected() {
-        return mDiagnosticsSelected;
-    }
+        private View mView;
 
+        public GenericTextWatcher(View view) {
+            mView = view;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String value = s.toString().replace("\\s+", "");
+            switch (mView.getId()) {
+                case R.id.previous_exams:
+                    mPatient.getExams().clear();
+                    Collections.addAll(mPatient.getExams(), value.split(","));
+                    break;
+                case R.id.diagnostics:
+                    mPatient.getDiagnostics().clear();
+                    Collections.addAll(mPatient.getDiagnostics(), value.split(","));
+                    break;
+                case R.id.procedure_performed:
+                    mPatient.setProcedurePerformed(value);
+                    break;
+                case R.id.recommendations:
+                    mPatient.setRecommendations(value);
+                case R.id.history:
+                    mPatient.setMedicalHistory(value);
+            }
+        }
+    }
 }

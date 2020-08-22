@@ -72,7 +72,7 @@ public class NewProcedureActivity extends AppCompatActivity {
         mPatientDataFragment = PatientDataFragment.newInstance(mPatient);
         mFragments.add(mPatientDataFragment);
 
-        mProcedureFragment = ProcedureFragment.newInstance();
+        mProcedureFragment = ProcedureFragment.newInstance(mPatient);
         mFragments.add(mProcedureFragment);
 
         mPhotoGalleryFragment = PhotoGalleryFragment.newInstance("");

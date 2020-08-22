@@ -30,7 +30,7 @@ public class VeterinaryReportsApp extends Application {
         public VeterinaryReportsExceptionHandler() {
             try {
                 this.defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
-                folder = FileHelper.geLogsFolder("Logs");
+                folder = FileHelper.geLogsFolder("Temp");
                 if (!folder.exists()) {
                     folder.mkdir();
                 }
