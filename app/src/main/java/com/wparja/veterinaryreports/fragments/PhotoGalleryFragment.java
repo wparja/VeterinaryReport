@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.wparja.veterinaryreports.R;
+import com.wparja.veterinaryreports.utils.FileHelper;
 import com.wparja.veterinaryreports.utils.loadGallery.ThumbnailLoaderPhoto;
 
 
@@ -26,7 +27,6 @@ import java.util.List;
 public class PhotoGalleryFragment extends Fragment {
 
     private static final String ARG_PHOTO_FOLDER_PATH = "argPhotoFolderPath";
-
 
     private String mPhotoFolderPath;
     private RecyclerView mRecyclerViewPhoto;
@@ -52,6 +52,11 @@ public class PhotoGalleryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        if (getArguments() != null) {
+            mPhotoFolderPath = getArguments().getString(ARG_PHOTO_FOLDER_PATH);
+        }
+
         mPhotoAdapter = new PhotoAdapter();
         mHandlerResponse = new Handler() {
             @Override
@@ -65,19 +70,6 @@ public class PhotoGalleryFragment extends Fragment {
         mThumbnailLoaderPhoto = new ThumbnailLoaderPhoto(mHandlerResponse);
         mThumbnailLoaderPhoto.start();
         mThumbnailLoaderPhoto.getLooper();
-
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                mThumbnailLoaderPhoto.queueThumbnail("Temp");
-                return null;
-            }
-        }.execute();
-
-
-        if (getArguments() != null) {
-            mPhotoFolderPath = getArguments().getString(ARG_PHOTO_FOLDER_PATH);
-        }
     }
 
     @Override
@@ -98,6 +90,13 @@ public class PhotoGalleryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                mThumbnailLoaderPhoto.queueThumbnail(mPhotoFolderPath);
+                return null;
+            }
+        }.execute();
     }
 
     @Override

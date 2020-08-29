@@ -7,6 +7,7 @@ import com.wparja.veterinaryreports.persistence.entities.Diagnostics;
 import com.wparja.veterinaryreports.persistence.entities.Exams;
 import com.wparja.veterinaryreports.persistence.entities.Report;
 import com.wparja.veterinaryreports.persistence.entities.Specie;
+import com.wparja.veterinaryreports.utils.FileHelper;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -117,16 +118,18 @@ public class DataProvider {
     }
 
     public void savePatient(Report patient) {
-        // todo create a folder
-        // move all photo inside temp to new folder
-        // delete all photo from temp
         saveSpecie(patient.getPatientSpecie(), patient.getPatientBreed());
         saveExams(patient.getExams());
         saveDiagnostic(patient.getDiagnostics());
         mPersistenceManager.persist(patient);
+
     }
 
-    public List<Report> search(String criteria) throws SQLException {
-        return mPersistenceManager.getQueryBuilder(Report.class).where().eq("patient_name", criteria).query();
+    public List<Report> searchByName(String criteria) throws SQLException {
+        return search("patient_name", criteria);
+    }
+
+    private List<Report> search(String column, String value) throws SQLException {
+        return mPersistenceManager.getQueryBuilder(Report.class).where().eq(column, value).query();
     }
 }

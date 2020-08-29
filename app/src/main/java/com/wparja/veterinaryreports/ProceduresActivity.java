@@ -57,7 +57,7 @@ public class ProceduresActivity extends AppCompatActivity {
 
     public void search(View view) {
         try {
-            mReports = DataProvider.getInstance().search(mEditTextSearch.getText().toString());
+            mReports = DataProvider.getInstance().searchByName(mEditTextSearch.getText().toString());
             mRecyclerView.setAdapter(new PatientAdapter());
         } catch (SQLException e) {
             e.printStackTrace();

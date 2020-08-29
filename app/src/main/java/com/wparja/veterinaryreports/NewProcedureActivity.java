@@ -29,6 +29,7 @@ import com.wparja.veterinaryreports.fragments.ProcedureFragment;
 import com.wparja.veterinaryreports.logging.LoggerHelper;
 import com.wparja.veterinaryreports.persistence.entities.Report;
 import com.wparja.veterinaryreports.utils.FileHelper;
+import com.wparja.veterinaryreports.utils.SequenceGenerator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class NewProcedureActivity extends AppCompatActivity {
         if (getIntent() != null) {
             mPatient = (Report) getIntent().getSerializableExtra(ARG);
             if (mPatient == null) {
-                mPatient = new Report();
+                mPatient = new Report(String.valueOf(SequenceGenerator.getInstance().nextId()));
             }
         }
 
@@ -75,7 +76,7 @@ public class NewProcedureActivity extends AppCompatActivity {
         mProcedureFragment = ProcedureFragment.newInstance(mPatient);
         mFragments.add(mProcedureFragment);
 
-        mPhotoGalleryFragment = PhotoGalleryFragment.newInstance("");
+        mPhotoGalleryFragment = PhotoGalleryFragment.newInstance(mPatient.getFolderName());
         mFragments.add(mPhotoGalleryFragment);
 
 
@@ -124,8 +125,8 @@ public class NewProcedureActivity extends AppCompatActivity {
 }
 
     private void takePhoto() throws Exception {
-        String fileName = "temp_" + System.currentTimeMillis() + ".jpg";
-        File photoFile = new File(FileHelper.gePhotoFolder("Temp"),fileName);
+        String fileName = System.currentTimeMillis() + FileHelper.PHOTO_EXTENSION;
+        File photoFile = new File(FileHelper.gePhotoFolder(mPatient.getFolderName()), fileName);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         boolean canTackPhoto = captureImage.resolveActivity(getPackageManager()) != null;
 

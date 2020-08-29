@@ -39,9 +39,10 @@ public class ProcedureFragment extends Fragment {
     EditText mExams;
     EditText mDiagnostics;
     EditText mProcedurePerformed;
-    ImageButton mProcedurePerformedImgBtn;
     EditText mRecommendations;
     EditText mHistory;
+    EditText mClinicName;
+    EditText mSurgeon;
     List<String> mExamsSelected = new ArrayList<>();
     List<String> mDiagnosticsSelected = new ArrayList<>();
     TextInputLayout mTextInputLayout;
@@ -93,23 +94,21 @@ public class ProcedureFragment extends Fragment {
         mHistory.setText(mPatient.getMedicalHistory());
         mHistory.addTextChangedListener(new GenericTextWatcher(mHistory));
 
-        //  mProcedurePerformedImgBtn = view.findViewById(R.id.procedure_performed_img_btn);
+        mClinicName = view.findViewById(R.id.clinic_name);
+        mClinicName.setText(mPatient.getClinicName());
+        mClinicName.addTextChangedListener(new GenericTextWatcher(mClinicName));
+
+        mSurgeon = view.findViewById(R.id.surgeon);
+        mSurgeon.setText(mPatient.getSurgeon());
+        mSurgeon.addTextChangedListener(new GenericTextWatcher(mSurgeon));
+
         mTextInputLayout = view.findViewById(R.id.previous_exams_text_input_layout);
 
-        mExams.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createChoiceDialog(getString(R.string.previous_exams), getString(R.string.new_exam), mExams, DataProvider.getInstance().getExams().getItems(), mExamsSelected);
-            }
-        });
-
-
+        mExams.setOnClickListener(v -> createChoiceDialog(getString(R.string.previous_exams), getString(R.string.new_exam), mExams, DataProvider.getInstance().getExams().getItems(), mExamsSelected));
         mDiagnostics.setOnClickListener(v -> createChoiceDialog(getString(R.string.diagnostics), getString(R.string.new_diagnostic), mDiagnostics, DataProvider.getInstance().getDiagnostics().getItems(), mDiagnosticsSelected));
-
-     //   mProcedurePerformedImgBtn.setOnClickListener(v -> createEditTextDialog(getString(R.string.procedure_performed), mProcedurePerformed));
-
         mRecommendations.setOnClickListener(v -> createEditTextDialog(getString(R.string.recommendations), mRecommendations));
         mHistory.setOnClickListener(v -> createEditTextDialog(getString(R.string.history), mHistory));
+
         return view;
     }
 
@@ -215,8 +214,16 @@ public class ProcedureFragment extends Fragment {
                     break;
                 case R.id.recommendations:
                     mPatient.setRecommendations(value);
+                    break;
                 case R.id.history:
                     mPatient.setMedicalHistory(value);
+                    break;
+                case R.id.clinic_name:
+                    mPatient.setClinicName(value);
+                    break;
+                case R.id.surgeon:
+                    mPatient.setSurgeon(value);
+                    break;
             }
         }
     }

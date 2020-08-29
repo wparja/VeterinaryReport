@@ -1,6 +1,9 @@
 package com.wparja.veterinaryreports.utils;
 
 import android.os.Environment;
+
+import com.wparja.veterinaryreports.persistence.entities.Report;
+
 import java.io.File;
 
 public class FileHelper {
@@ -9,9 +12,16 @@ public class FileHelper {
     public static final String FILES = "Files/";
     public static final String LOGS = "Logs/";
     public static final String ROOT_FOLDER = "/Veterinary Reports/";
+    public static final String TEMP_FOLDER = "Temp/";
+    public static final String TEMP_PREFIX_PHOTO_NAME = "temp_";
+    public static final String PHOTO_EXTENSION = ".jpg";
 
     public static File getRootFolder() throws Exception {
         return createFolder(Environment.getExternalStorageDirectory(), ROOT_FOLDER);
+    }
+
+    public static File getTempFolder()throws Exception{
+        return createFolder(getRootFolder(), TEMP_FOLDER);
     }
 
     public static File gePhotoFolder(String folderName) throws Exception {

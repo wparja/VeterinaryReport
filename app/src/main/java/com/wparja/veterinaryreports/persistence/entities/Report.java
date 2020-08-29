@@ -2,13 +2,11 @@ package com.wparja.veterinaryreports.persistence.entities;
 
 
 import android.text.TextUtils;
-import android.widget.TextView;
-
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.util.Collections;
+
 
 @DatabaseTable
 public class Report extends BaseEntity {
@@ -16,6 +14,11 @@ public class Report extends BaseEntity {
     public Report() {
         mExams = new Items<>();
         mDiagnostics = new Items<>();
+    }
+
+    public Report(String folderName) {
+        this();
+        mFolderName = folderName;
     }
 
     @DatabaseField
@@ -68,6 +71,9 @@ public class Report extends BaseEntity {
 
     @DatabaseField(columnName = "end_procedure")
     private String mEnd;
+
+    @DatabaseField(columnName = "folder_name")
+    private String mFolderName;
 
     public String getSurgeon() {
         return mSurgeon;
@@ -210,5 +216,13 @@ public class Report extends BaseEntity {
 
     public void setEnd(String end) {
         mEnd = end;
+    }
+
+    public String getFolderName() {
+        return mFolderName;
+    }
+
+    public void setFolderName(String folderName) {
+        mFolderName = folderName;
     }
 }
