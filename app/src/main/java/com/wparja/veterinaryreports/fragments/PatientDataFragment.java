@@ -18,11 +18,13 @@ import android.widget.Spinner;
 
 import com.wparja.veterinaryreports.R;
 import com.wparja.veterinaryreports.data.DataProvider;
+import com.wparja.veterinaryreports.persistence.entities.NamedEntity;
 import com.wparja.veterinaryreports.persistence.entities.Report;
 import com.wparja.veterinaryreports.persistence.entities.Specie;
 
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,6 +69,7 @@ public class PatientDataFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        assert getArguments() != null;
         mPatient = (Report) getArguments().getSerializable(ARG);
     }
 
@@ -114,8 +117,8 @@ public class PatientDataFragment extends Fragment {
 
     private void fillAndSetListenerSpecieAutoCompleteTextView() {
         mSpecies = DataProvider.getInstance().getSpecies();
-        List<String> specieNames = mSpecies.stream().map(x -> x.getName()).collect(Collectors.toList());
-        ArrayAdapter<String> speciesAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, specieNames);
+        List<String> specieNames = mSpecies.stream().map(NamedEntity::getName).collect(Collectors.toList());
+        ArrayAdapter<String> speciesAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_dropdown_item_1line, specieNames);
         mSpeciesActv.setAdapter(speciesAdapter);
 
         mSpeciesActv.addTextChangedListener(new TextWatcher() {
@@ -128,7 +131,7 @@ public class PatientDataFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Optional<Specie> specie = mSpecies.stream().filter(x -> x.getName().equals(s.toString())).findFirst();
                 if (specie.isPresent()) {
-                    ArrayAdapter<String> breedsAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, specie.get().getItems());
+                    ArrayAdapter<String> breedsAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_dropdown_item_1line, specie.get().getItems());
                     mBreedsActv.setAdapter(breedsAdapter);
                 }
                 mBreedsActv.addTextChangedListener(new TextWatcher() {
@@ -157,7 +160,7 @@ public class PatientDataFragment extends Fragment {
     }
 
     private void fillGenderSpinner() {
-        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, new String[] {getString(R.string.male), getString(R.string.female)});
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_dropdown_item_1line, new String[] {getString(R.string.male), getString(R.string.female)});
         mGendersSpinner.setAdapter(genderAdapter);
         int selectionPosition = genderAdapter.getPosition(mPatient.getPatientGender());
         if (selectionPosition != -1) {

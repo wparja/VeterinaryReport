@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import com.wparja.veterinaryreports.fragments.PhotoGalleryFragment;
+import com.wparja.veterinaryreports.model.Photo;
 import com.wparja.veterinaryreports.utils.FileHelper;
 import com.wparja.veterinaryreports.utils.PictureUtils;
 
@@ -33,7 +35,8 @@ public class ThumbnailLoaderPhoto extends HandlerThread {
             File files = FileHelper.gePhotoFolder(path);
             for (File file : files.listFiles()) {
                 Bitmap b1 =  PictureUtils.getScaledBitmap(file.getAbsolutePath(), 100, 100);
-                mResponseHandler.obtainMessage(PHOTO_LOADED, b1).sendToTarget();
+                Photo photo = new Photo(b1, file.getName());
+                mResponseHandler.obtainMessage(PHOTO_LOADED, photo).sendToTarget();
 
             }
         } catch (Exception e) {

@@ -1,6 +1,6 @@
 package com.wparja.veterinaryreports.fragments;
 
-import android.graphics.Bitmap;
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.wparja.veterinaryreports.R;
-import com.wparja.veterinaryreports.utils.FileHelper;
+import com.wparja.veterinaryreports.model.Photo;
 import com.wparja.veterinaryreports.utils.loadGallery.ThumbnailLoaderPhoto;
 
 
@@ -29,10 +29,8 @@ public class PhotoGalleryFragment extends Fragment {
     private static final String ARG_PHOTO_FOLDER_PATH = "argPhotoFolderPath";
 
     private String mPhotoFolderPath;
-    private RecyclerView mRecyclerViewPhoto;
     private ThumbnailLoaderPhoto mThumbnailLoaderPhoto;
-    private Handler mHandlerResponse;
-    private List<Bitmap> mBitmaps = new ArrayList<>();
+    private List<Photo> mPhotos = new ArrayList<>();
     private PhotoAdapter mPhotoAdapter;
 
 
@@ -48,6 +46,7 @@ public class PhotoGalleryFragment extends Fragment {
         return fragment;
     }
 
+    @SuppressLint("HandlerLeak")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,16 +57,19 @@ public class PhotoGalleryFragment extends Fragment {
         }
 
         mPhotoAdapter = new PhotoAdapter();
-        mHandlerResponse = new Handler() {
+        Handler handlerResponse = new Handler() {
             @Override
             public void handleMessage(@NonNull Message msg) {
-                Bitmap b = (Bitmap) msg.obj;
-                mBitmaps.add(b);
+                Photo newPhoto = (Photo) msg.obj;
+                for (Photo photo : mPhotos) {
+                    if (photo.getName().equals(newPhoto.getName())) return;
+                }
+                mPhotos.add(newPhoto);
                 mPhotoAdapter.notifyDataSetChanged();
 
             }
         };
-        mThumbnailLoaderPhoto = new ThumbnailLoaderPhoto(mHandlerResponse);
+        mThumbnailLoaderPhoto = new ThumbnailLoaderPhoto(handlerResponse);
         mThumbnailLoaderPhoto.start();
         mThumbnailLoaderPhoto.getLooper();
     }
@@ -77,16 +79,17 @@ public class PhotoGalleryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_photo_gallery, container, false);
-        mRecyclerViewPhoto = view.findViewById(R.id.photo_recycler_view);
-        mRecyclerViewPhoto.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        mRecyclerViewPhoto.setHasFixedSize(true);
-        mRecyclerViewPhoto.setItemViewCacheSize(20);
-        mRecyclerViewPhoto.setDrawingCacheEnabled(true);
-        mRecyclerViewPhoto.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        mRecyclerViewPhoto.setAdapter(mPhotoAdapter);
+        RecyclerView recyclerViewPhoto = view.findViewById(R.id.photo_recycler_view);
+        recyclerViewPhoto.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        recyclerViewPhoto.setHasFixedSize(true);
+        recyclerViewPhoto.setItemViewCacheSize(20);
+        recyclerViewPhoto.setDrawingCacheEnabled(true);
+        recyclerViewPhoto.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        recyclerViewPhoto.setAdapter(mPhotoAdapter);
         return view;
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void onResume() {
         super.onResume();
@@ -105,7 +108,7 @@ public class PhotoGalleryFragment extends Fragment {
         mThumbnailLoaderPhoto.quit();
     }
 
-    private class PhotoHolder extends RecyclerView.ViewHolder {
+    private static class PhotoHolder extends RecyclerView.ViewHolder {
 
         private ImageView mImageViewPhoto;
 
@@ -114,8 +117,8 @@ public class PhotoGalleryFragment extends Fragment {
             mImageViewPhoto = (ImageView) itemView;
         }
 
-        public void bind(Bitmap photo) {
-            mImageViewPhoto.setImageBitmap(photo);
+        public void bind(Photo photo) {
+            mImageViewPhoto.setImageBitmap(photo.getBitmap());
         }
     }
 
@@ -134,39 +137,13 @@ public class PhotoGalleryFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull PhotoHolder holder, int position) {
-            Bitmap photo = mBitmaps.get(position);
+            Photo photo = mPhotos.get(position);
             holder.bind(photo);
         }
 
         @Override
         public int getItemCount() {
-            return mBitmaps.size();
-        }
-    }
-
-    public class Photo {
-        private String path;
-        private boolean isSelected;
-
-        public Photo(String path) {
-            this.isSelected = false;
-            this.path = path;
-        }
-
-        public String getPath() {
-            return path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-
-        public boolean isSelected() {
-            return isSelected;
-        }
-
-        public void setSelected(boolean selected) {
-            isSelected = selected;
+            return mPhotos.size();
         }
     }
 }

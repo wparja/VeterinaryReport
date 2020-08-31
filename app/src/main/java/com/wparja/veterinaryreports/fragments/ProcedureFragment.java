@@ -1,6 +1,5 @@
 package com.wparja.veterinaryreports.fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -13,25 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
-
-import com.google.android.material.textfield.TextInputLayout;
 import com.wparja.veterinaryreports.R;
 import com.wparja.veterinaryreports.data.DataProvider;
-import com.wparja.veterinaryreports.persistence.entities.Items;
 import com.wparja.veterinaryreports.persistence.entities.Report;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProcedureFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProcedureFragment extends Fragment {
 
     private static final String ARG = "ARG";
@@ -45,12 +36,9 @@ public class ProcedureFragment extends Fragment {
     EditText mSurgeon;
     List<String> mExamsSelected = new ArrayList<>();
     List<String> mDiagnosticsSelected = new ArrayList<>();
-    TextInputLayout mTextInputLayout;
     Report mPatient;
 
-    public ProcedureFragment() {
-        // Required empty public constructor
-    }
+    public ProcedureFragment() {}
 
     public static ProcedureFragment newInstance(Report report) {
         ProcedureFragment procedureFragment = new ProcedureFragment();
@@ -64,13 +52,12 @@ public class ProcedureFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        assert getArguments() != null;
         mPatient = (Report) getArguments().getSerializable(ARG);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_procedure, container, false);
         mExams = view.findViewById(R.id.previous_exams);
         mExams.setText(mPatient.getExamsFormatted());
@@ -102,18 +89,17 @@ public class ProcedureFragment extends Fragment {
         mSurgeon.setText(mPatient.getSurgeon());
         mSurgeon.addTextChangedListener(new GenericTextWatcher(mSurgeon));
 
-        mTextInputLayout = view.findViewById(R.id.previous_exams_text_input_layout);
-
-        mExams.setOnClickListener(v -> createChoiceDialog(getString(R.string.previous_exams), getString(R.string.new_exam), mExams, DataProvider.getInstance().getExams().getItems(), mExamsSelected));
-        mDiagnostics.setOnClickListener(v -> createChoiceDialog(getString(R.string.diagnostics), getString(R.string.new_diagnostic), mDiagnostics, DataProvider.getInstance().getDiagnostics().getItems(), mDiagnosticsSelected));
+        mExams.setOnClickListener(v -> createChoiceDialog(getString(R.string.previous_exams), getString(R.string.new_exam), mExams, DataProvider.getInstance().getExams().getItems(), mExamsSelected, DataProvider.getInstance()::saveExams));
+        mDiagnostics.setOnClickListener(v -> createChoiceDialog(getString(R.string.diagnostics), getString(R.string.new_diagnostic), mDiagnostics, DataProvider.getInstance().getDiagnostics().getItems(), mDiagnosticsSelected, DataProvider.getInstance()::saveDiagnostic));
         mRecommendations.setOnClickListener(v -> createEditTextDialog(getString(R.string.recommendations), mRecommendations));
+        mProcedurePerformed.setOnClickListener(v -> createEditTextDialog(getString(R.string.procedure), mProcedurePerformed));
         mHistory.setOnClickListener(v -> createEditTextDialog(getString(R.string.history), mHistory));
 
         return view;
     }
 
-    private void createChoiceDialog(String title, String label, TextView editText, List<String> allData, List<String> allDataSelected) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    private void createChoiceDialog(String title, String label, TextView editText, List<String> allData, List<String> allDataSelected, Consumer<List<String>> saveMethod) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         final LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.dialog_choice_data, null, false);
         TextView newDataLabel = view.findViewById(R.id.new_data_text_view);
@@ -132,31 +118,34 @@ public class ProcedureFragment extends Fragment {
                 }
             }
         }
-        builder.setMultiChoiceItems(allData.toArray(new CharSequence[allData.size()]), checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                if (isChecked) {
-                    allDataSelected.add(allData.get(which));
-                } else {
-                    allDataSelected.remove(allData.get(which));
-                }
+
+        builder.setMultiChoiceItems(allData.toArray(new CharSequence[allData.size()]), checkedItems, (dialog, which, isChecked) -> {
+            if (isChecked) {
+                allDataSelected.add(allData.get(which));
+            } else {
+                allDataSelected.remove(allData.get(which));
             }
         });
 
         builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+            String data = newDataInput.getText().toString();
+            if (!TextUtils.isEmpty(data)) {
 
-            if (!TextUtils.isEmpty(newDataInput.getText()) && !allDataSelected.contains(newDataInput.getText().toString())) {
-                allDataSelected.add(newDataInput.getText().toString());
+                if (!allData.contains(data)) {
+                    allData.add(data);
+                    saveMethod.accept(allData);
+                }
+
+                if (!allDataSelected.contains(newDataInput.getText().toString())) {
+                    allDataSelected.add(newDataInput.getText().toString());
+                }
             }
 
             editText.setText(TextUtils.join(", ", allDataSelected));
-            mTextInputLayout.invalidate();
             dialog.dismiss();
         });
 
-        builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
-            dialog.dismiss();
-        });
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
 
 
         AlertDialog dialog = builder.create();
@@ -164,7 +153,7 @@ public class ProcedureFragment extends Fragment {
     }
 
     private void createEditTextDialog(String title, TextView text) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         final LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.dialog_edit_data, null, false);
         EditText data = view. findViewById(R.id.edit_text_data);

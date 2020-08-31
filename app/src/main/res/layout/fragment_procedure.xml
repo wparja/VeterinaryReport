@@ -19,7 +19,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="14sp"
-            android:focusableInTouchMode="false"
             android:drawablePadding="8dp"
             android:hint="@string/clinic_name"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -36,7 +35,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="14sp"
-            android:focusableInTouchMode="false"
             android:drawablePadding="8dp"
             android:hint="@string/surgeon"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -53,7 +51,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="14sp"
-            android:focusableInTouchMode="false"
             android:drawablePadding="8dp"
             android:hint="@string/previous_exams"/>
     </com.google.android.material.textfield.TextInputLayout>
