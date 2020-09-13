@@ -1,6 +1,7 @@
 package com.wparja.veterinaryreports.fragments;
 
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import android.text.Editable;
@@ -16,17 +17,22 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.wparja.veterinaryreports.NewProcedureActivity;
 import com.wparja.veterinaryreports.R;
 import com.wparja.veterinaryreports.data.DataProvider;
+import com.wparja.veterinaryreports.logging.LoggerHelper;
 import com.wparja.veterinaryreports.persistence.entities.NamedEntity;
 import com.wparja.veterinaryreports.persistence.entities.Report;
 import com.wparja.veterinaryreports.persistence.entities.Specie;
+import com.wparja.veterinaryreports.utils.PictureUtils;
 
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.wparja.veterinaryreports.utils.FileHelper.PHOTOS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -92,7 +98,26 @@ public class PatientDataFragment extends Fragment {
         fillGenderSpinner();
         fillAndSetListenerSpecieAutoCompleteTextView();
         bindPatientData();
+
+        mNewPhotoImgButton.setOnClickListener(this::takePhoto);
+
         return view;
+    }
+
+    private void takePhoto(View view) {
+        try {
+            ((NewProcedureActivity)getActivity()).takePhoto(NewProcedureActivity.REQUEST_MAIN_PHOTO);
+        } catch (Exception e) {
+            String error = "Error trying take photo";
+            if (e != null) {
+                error = e.getMessage();
+            }
+            LoggerHelper.getInstance().logError(error);
+        }
+    }
+
+    public void updatePhoto() {
+        mPatientMainPhoto.setImageBitmap(PictureUtils.getThumbnail(mPatient.getMainPhoto()));
     }
 
     private void bindPatientData() {
@@ -113,6 +138,8 @@ public class PatientDataFragment extends Fragment {
 
         mSpeciesActv.setText(mPatient.getPatientSpecie());
         mBreedsActv.setText(mPatient.getPatientBreed());
+
+        updatePhoto();
     }
 
     private void fillAndSetListenerSpecieAutoCompleteTextView() {

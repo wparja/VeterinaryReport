@@ -12,10 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wparja.veterinaryreports.data.DataProvider;
+import com.wparja.veterinaryreports.logging.LoggerHelper;
 import com.wparja.veterinaryreports.persistence.entities.Report;
+import com.wparja.veterinaryreports.utils.PhotoUtils;
+import com.wparja.veterinaryreports.utils.PictureUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -59,8 +63,8 @@ public class ProceduresActivity extends AppCompatActivity {
         try {
             mReports = DataProvider.getInstance().searchByName(mEditTextSearch.getText().toString());
             mRecyclerView.setAdapter(new PatientAdapter());
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LoggerHelper.getInstance().logError(e.getMessage());
         }
     }
 
@@ -71,6 +75,7 @@ public class ProceduresActivity extends AppCompatActivity {
         TextView mTextViewClinicName;
         TextView mTextViewProcedureName;
         TextView mTextViewProcedureDate;
+        ImageView mImageViewPatientPhoto;
         Report mReport;
 
         public PatientHolder(@NonNull View itemView) {
@@ -80,15 +85,16 @@ public class ProceduresActivity extends AppCompatActivity {
             mTextViewClinicName = itemView.findViewById(R.id.clinic_name);
             mTextViewProcedureName = itemView.findViewById(R.id.procedure_name);
             mTextViewProcedureDate = itemView.findViewById(R.id.procedure_date);
-
+            mImageViewPatientPhoto = itemView.findViewById(R.id.patient_photo);
             itemView.setOnClickListener( v -> startActivity(NewProcedureActivity.newInstance(ProceduresActivity.this, mReport)));
         }
 
         private void bind(Report report) {
-            mTextViewPatientName.setText(report.getPatientName());
-            mTextViewClinicName.setText(report.getClinicName());
-            mTextViewProcedureName.setText(report.getProcedurePerformed());
             mReport = report;
+            mTextViewPatientName.setText(mReport.getPatientName());
+            mTextViewClinicName.setText(mReport.getClinicName());
+            mTextViewProcedureName.setText(mReport.getProcedurePerformed());
+            mImageViewPatientPhoto.setImageBitmap(PictureUtils.getThumbnail(mReport.getMainPhoto()));
         }
     }
 

@@ -2,6 +2,8 @@ package com.wparja.veterinaryreports.utils.loadGallery;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.Handler;
 import android.os.HandlerThread;
 
@@ -11,6 +13,8 @@ import com.wparja.veterinaryreports.utils.FileHelper;
 import com.wparja.veterinaryreports.utils.PictureUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class ThumbnailLoaderPhoto extends HandlerThread {
 
@@ -35,7 +39,7 @@ public class ThumbnailLoaderPhoto extends HandlerThread {
             File files = FileHelper.gePhotoFolder(path);
             for (File file : files.listFiles()) {
                 Bitmap b1 =  PictureUtils.getScaledBitmap(file.getAbsolutePath(), 100, 100);
-                Photo photo = new Photo(b1, file.getName());
+                Photo photo = new Photo(b1, file);
                 mResponseHandler.obtainMessage(PHOTO_LOADED, photo).sendToTarget();
 
             }

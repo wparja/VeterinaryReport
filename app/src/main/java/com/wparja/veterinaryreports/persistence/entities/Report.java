@@ -75,6 +75,9 @@ public class Report extends BaseEntity {
     @DatabaseField(columnName = "folder_name")
     private String mFolderName;
 
+    @DatabaseField(columnName = "main_photo")
+    private String mMainPhoto;
+
     public String getSurgeon() {
         return mSurgeon;
     }
@@ -224,5 +227,13 @@ public class Report extends BaseEntity {
 
     public void setFolderName(String folderName) {
         mFolderName = folderName;
+    }
+
+    public String getMainPhoto() {
+        return mMainPhoto;
+    }
+
+    public void setMainPhoto(String mainPhoto) {
+        mMainPhoto = mainPhoto;
     }
 }

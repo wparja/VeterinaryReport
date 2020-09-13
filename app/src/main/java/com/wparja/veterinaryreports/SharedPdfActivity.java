@@ -32,6 +32,8 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.wparja.veterinaryreports.utils.FileHelper;
@@ -358,6 +360,8 @@ public class SharedPdfActivity extends AppCompatActivity {
 
             Uri contentUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", file);
             shareDocument(contentUri);
+
+
 
         } catch (DocumentException | IOException e) {
             e.printStackTrace();

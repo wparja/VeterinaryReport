@@ -1,23 +1,33 @@
 package com.wparja.veterinaryreports.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Message;
+import android.provider.DocumentsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.wparja.veterinaryreports.BuildConfig;
+import com.wparja.veterinaryreports.NewProcedureActivity;
 import com.wparja.veterinaryreports.R;
+import com.wparja.veterinaryreports.logging.LoggerHelper;
 import com.wparja.veterinaryreports.model.Photo;
+import com.wparja.veterinaryreports.utils.FileHelper;
 import com.wparja.veterinaryreports.utils.loadGallery.ThumbnailLoaderPhoto;
 
 
@@ -79,6 +89,25 @@ public class PhotoGalleryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_photo_gallery, container, false);
+        view.findViewById(R.id.owner);
+        view.findViewById(R.id.open_folder_card).setOnClickListener(v -> {
+            try {
+                open();
+            } catch (Exception e) {
+                LoggerHelper.getInstance().logError(e.getMessage());
+            }
+        });
+
+        view.findViewById(R.id.new_photo_card).setOnClickListener(v ->
+        {
+            try {
+                ((NewProcedureActivity)getActivity()).takePhoto(NewProcedureActivity.REQUEST_PHOTO);
+            } catch (Exception e) {
+                LoggerHelper.getInstance().logError(e.getMessage());
+            }
+
+        });
+
         RecyclerView recyclerViewPhoto = view.findViewById(R.id.photo_recycler_view);
         recyclerViewPhoto.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         recyclerViewPhoto.setHasFixedSize(true);
@@ -87,6 +116,23 @@ public class PhotoGalleryFragment extends Fragment {
         recyclerViewPhoto.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerViewPhoto.setAdapter(mPhotoAdapter);
         return view;
+    }
+
+
+    private void open() throws Exception {
+
+        Uri selectedUri = Uri.parse(FileHelper.gePhotoFolder(mPhotoFolderPath).getAbsolutePath());
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(selectedUri, "resource/folder");
+
+        if (intent.resolveActivityInfo(getActivity().getPackageManager(), 0) != null)
+        {
+            startActivity(intent);
+        }
+        else
+        {
+            Toast.makeText(getActivity(), "Not file manager installed", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -108,16 +154,24 @@ public class PhotoGalleryFragment extends Fragment {
         mThumbnailLoaderPhoto.quit();
     }
 
-    private static class PhotoHolder extends RecyclerView.ViewHolder {
+    private class PhotoHolder extends RecyclerView.ViewHolder {
 
         private ImageView mImageViewPhoto;
+        private Photo mPhoto;
 
         public PhotoHolder(@NonNull View itemView) {
             super(itemView);
             mImageViewPhoto = (ImageView) itemView;
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                Uri uri = Uri.parse(mPhoto.getAbsolutePath());
+                intent.setDataAndType(uri, "image/*");
+                startActivity(intent);
+            });
         }
 
         public void bind(Photo photo) {
+            mPhoto = photo;
             mImageViewPhoto.setImageBitmap(photo.getBitmap());
         }
     }

@@ -15,20 +15,21 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.nightonke.boommenu.BoomButtons.HamButton;
-import com.nightonke.boommenu.BoomMenuButton;
 import com.wparja.veterinaryreports.data.DataProvider;
 import com.wparja.veterinaryreports.fragments.PatientDataFragment;
 import com.wparja.veterinaryreports.fragments.PhotoGalleryFragment;
 import com.wparja.veterinaryreports.fragments.ProcedureFragment;
-import com.wparja.veterinaryreports.logging.LoggerHelper;
 import com.wparja.veterinaryreports.persistence.entities.Report;
 import com.wparja.veterinaryreports.utils.FileHelper;
+import com.wparja.veterinaryreports.utils.PhotoUtils;
 import com.wparja.veterinaryreports.utils.SequenceGenerator;
 
 import java.io.File;
@@ -38,17 +39,19 @@ import java.util.List;
 public class NewProcedureActivity extends AppCompatActivity {
 
     private static final String ARG = "ARG";
-    private static final int REQUEST_PHOTO = 2;
+    public static final int REQUEST_MAIN_PHOTO = 1;
+    public static final int REQUEST_PHOTO = 2;
 
     private Toolbar mToolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private BoomMenuButton bmb;
+    private FloatingActionButton bmb;
 
     private PatientDataFragment mPatientDataFragment;
     private ProcedureFragment mProcedureFragment;
     private PhotoGalleryFragment mPhotoGalleryFragment;
     private Report mPatient;
+    private File photoFile;
 
     private List<Fragment> mFragments = new ArrayList<>();
 
@@ -94,39 +97,19 @@ public class NewProcedureActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         bmb = findViewById(R.id.bmb);
-        HamButton.Builder builderSave = new HamButton.Builder()
-                .normalImageRes(R.drawable.ic_baseline_save_white_24)
-                .normalTextRes(R.string.save)
-                .listener(index -> {
-                   save();
-                })
-                .subNormalTextRes(R.string.save_all_data);
-        bmb.addBuilder(builderSave);
+        bmb.setOnClickListener(this::save);
+    }
 
-        HamButton.Builder builderShare = new HamButton.Builder()
-                .normalImageRes(R.drawable.ic_baseline_share_white_24)
-                .normalTextRes(R.string.shared)
-                .subNormalTextRes(R.string.shared_this_procedure);
-        bmb.addBuilder(builderShare);
+    public void takePhoto(int request_code) throws Exception {
 
-        HamButton.Builder builderPhoto = new HamButton.Builder()
-                .normalImageRes(R.drawable.ic_add_a_photo_white_24dp)
-                .normalTextRes(R.string.photo)
-                .subNormalTextRes(R.string.attach_new_photo)
-                .listener(index -> {
-                    try {
-                        takePhoto();
-                    } catch (Exception e) {
-                        LoggerHelper.getInstance().logError("Error taken photo" + e.getMessage());
-                    }
-                });
-        bmb.addBuilder(builderPhoto);
+        String fileName;
+        if (request_code == REQUEST_MAIN_PHOTO) {
+            fileName = "main" + FileHelper.PHOTO_EXTENSION;
+        } else {
+         fileName = System.currentTimeMillis() + FileHelper.PHOTO_EXTENSION;
+        }
 
-}
-
-    private void takePhoto() throws Exception {
-        String fileName = System.currentTimeMillis() + FileHelper.PHOTO_EXTENSION;
-        File photoFile = new File(FileHelper.gePhotoFolder(mPatient.getFolderName()), fileName);
+        photoFile = new File(FileHelper.gePhotoFolder(mPatient.getFolderName()), fileName);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         boolean canTackPhoto = captureImage.resolveActivity(getPackageManager()) != null;
 
@@ -135,7 +118,19 @@ public class NewProcedureActivity extends AppCompatActivity {
             captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         }
 
-        startActivityForResult(captureImage, REQUEST_PHOTO);
+        startActivityForResult(captureImage, request_code);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            PhotoUtils.rotateIfNeeded(photoFile.getAbsolutePath());
+            mPatient.setMainPhoto(photoFile.getAbsolutePath());
+            if (requestCode == REQUEST_MAIN_PHOTO) {
+                mPatientDataFragment.updatePhoto();
+            }
+        }
     }
 
     @Override
@@ -164,7 +159,7 @@ public class NewProcedureActivity extends AppCompatActivity {
     }
 
 
-    public void save() {
+    public void save(View view) {
         DataProvider.getInstance().savePatient(mPatient);
     }
 

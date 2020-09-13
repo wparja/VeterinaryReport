@@ -37,4 +37,8 @@ public class PictureUtils {
         activity.getWindowManager().getDefaultDisplay().getSize(size);
         return getScaledBitmap(path, size.x, size.y);
     }
+
+    public static Bitmap getThumbnail(String path) {
+        return getScaledBitmap(path, 100,100);
+    }
 }

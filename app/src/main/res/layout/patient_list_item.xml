@@ -13,6 +13,7 @@
         android:background="@color/lightGray"
         android:layout_margin="4dp">
         <ImageView
+            android:id="@+id/patient_photo"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_margin="4dp"
