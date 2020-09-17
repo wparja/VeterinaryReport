@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="40dp"
+        android:height="40dp"
+        android:drawable="@drawable/ic_baseline_description_24"
+        android:gravity="center">
+    </item>
+    <item
+        android:right="25dp"
+        android:top="3dp"
+        android:width="18dp"
+        android:height="18dp"
+        android:drawable="@drawable/syringe_white"
+        android:gravity="center">
+    </item>
+</layer-list>

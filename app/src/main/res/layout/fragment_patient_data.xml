@@ -30,7 +30,7 @@
                     android:textSize="14sp"
                     android:layout_marginStart="8dp"
                     android:ems="10"
-                    android:inputType="textPersonName"
+                    android:inputType="textCapSentences"
                     android:hint="@string/patient_name"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -43,7 +43,7 @@
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
                     android:ems="10"
-                    android:inputType="textPersonName"
+                    android:inputType="textCapSentences"
                     android:hint="@string/owner"/>
             </com.google.android.material.textfield.TextInputLayout>
             <LinearLayout
@@ -134,6 +134,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:completionThreshold="1"
+            android:inputType="textCapSentences"
             android:hint="@string/specie"/>
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -147,6 +148,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:completionThreshold="1"
+            android:inputType="textCapSentences"
             android:hint="@string/breed"/>
     </com.google.android.material.textfield.TextInputLayout>
     <fr.ganfra.materialspinner.MaterialSpinner

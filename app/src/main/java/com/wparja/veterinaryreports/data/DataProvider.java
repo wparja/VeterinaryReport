@@ -130,6 +130,6 @@ public class DataProvider {
     }
 
     private List<Report> search(String column, String value) throws SQLException {
-        return mPersistenceManager.getQueryBuilder(Report.class).where().eq(column, value).query();
+        return mPersistenceManager.getQueryBuilder(Report.class).where().like(column, value).query();
     }
 }

@@ -19,7 +19,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="14sp"
-            android:drawablePadding="8dp"
+            android:inputType="textCapSentences"
             android:hint="@string/clinic_name"/>
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -35,7 +35,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="14sp"
-            android:drawablePadding="8dp"
+            android:inputType="textCapSentences"
             android:hint="@string/surgeon"/>
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -51,7 +51,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="14sp"
-            android:drawablePadding="8dp"
+            android:inputType="textCapSentences"
             android:hint="@string/previous_exams"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,7 +68,7 @@
             android:layout_marginEnd="8dp"
             android:textSize="14sp"
             android:focusableInTouchMode="false"
-            android:drawablePadding="8dp"
+            android:inputType="textCapSentences"
             android:hint="@string/diagnostics"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -85,7 +85,7 @@
             android:layout_marginEnd="8dp"
             android:textSize="14sp"
             android:focusableInTouchMode="false"
-            android:drawablePadding="8dp"
+            android:inputType="textCapSentences"
             android:hint="@string/procedure_performed"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -102,7 +102,7 @@
             android:layout_marginEnd="8dp"
             android:textSize="14sp"
             android:focusableInTouchMode="false"
-            android:drawablePadding="8dp"
+            android:inputType="textCapSentences"
             android:hint="@string/recommendations"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -119,7 +119,7 @@
             android:layout_marginEnd="8dp"
             android:textSize="14sp"
             android:focusableInTouchMode="false"
-            android:drawablePadding="8dp"
+            android:inputType="textCapSentences"
             android:hint="@string/history"/>
     </com.google.android.material.textfield.TextInputLayout>
 

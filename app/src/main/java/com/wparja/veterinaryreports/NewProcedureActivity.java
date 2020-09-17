@@ -163,6 +163,15 @@ public class NewProcedureActivity extends AppCompatActivity {
         DataProvider.getInstance().savePatient(mPatient);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getCurrentItem() == 0) {
+            super.onBackPressed();
+        } else {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+        }
+    }
+
     class NewProcedurePagerAdapter extends FragmentPagerAdapter {
 
         public NewProcedurePagerAdapter(@NonNull FragmentManager fm, int behavior) {
